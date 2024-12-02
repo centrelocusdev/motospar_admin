@@ -1,0 +1,67 @@
+.subHeading {
+    padding: 10px;
+    margin-left: 10px;
+}
+.divider {
+    margin-top: -5px;
+    margin-bottom: -5px;
+}
+.savebtn {
+    background-color: #ff803e;
+    border-color: #ff803e;
+}
+
+.image-upload-area {
+    border: 2px dashed #cfcfcf;
+    background-color: #fefefe;
+    height: 150px;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.border-dashed {
+    border-style: dashed !important;
+}
+
+.image-upload-area p,
+.image-upload-area small {
+    margin: 0;
+    color: #6c757d;
+}
+
+.active-dropzone {
+    background-color: #f0f8ff;
+    border-color: #007bff;
+}
+.image-upload-area {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    min-height: 120px;
+    background-color: #f9f9f9; /* Optional background */
+}
+
+.uploaded-files-list li {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.active-dropzone {
+    border-color: #007bff;
+    background-color: #f1f1f1;
+}
+
+@media (max-width: 576px) {
+    /* Responsive text adjustments for smaller screens */
+    .uploaded-files-list li {
+        font-size: 0.9rem;
+    }
+    .image-upload-area p {
+        font-size: 0.9rem;
+    }
+}
