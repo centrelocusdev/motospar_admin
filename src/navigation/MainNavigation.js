@@ -1,5 +1,5 @@
 import React from "react";
-import {BrowserRouter as Routes, Route, Navigate} from "react-router-dom";
+import {Routes, Route, Navigate} from "react-router-dom";
 
 import {AuthProvider} from "../context/AuthContext";
 import {useSelector} from "react-redux";
