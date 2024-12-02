@@ -2,14 +2,13 @@ import React, {useContext, useEffect} from "react";
 import SummaryCards from "./SummaryCard";
 import SalesGraph from "./SalesGraph";
 import RecentOrders from "./RecentOrders";
-import Header from "../HOC/Header";
 import {VendorContext} from "../../context/VendorContext";
 
 const Dashboard = () => {
     const {getStatistics, statisticsData} = useContext(VendorContext);
     useEffect(() => {
         getStatistics();
-    }, []);
+    });
     return (
         <div style={{flex: 1}}>
             <div className="dashboard-content p-4" style={{flex: 1}}>

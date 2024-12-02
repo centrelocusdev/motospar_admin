@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Form, Button, Row, Col, Container, Card} from "react-bootstrap";
+import {Form, Row, Col, Container, Card} from "react-bootstrap";
 import "../../assets/Css/ProductForm.css";
 import {VendorContext} from "../../context/VendorContext";
 const ProductForm = ({
@@ -23,7 +23,6 @@ const ProductForm = ({
     toggleProductStatusAPI,
     updatedData,
 }) => {
-    const {setimages, images} = useContext(VendorContext);
     const [name, setname] = useState(specificProductData ? specificProductData?.name : "");
     const [description, setdescription] = useState(specificProductData ? specificProductData?.description : "");
     const [brand, setbrand] = useState(specificProductData ? specificProductData?.brand : "");
