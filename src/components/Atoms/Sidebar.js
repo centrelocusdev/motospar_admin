@@ -188,7 +188,7 @@ const Sidebar = () => {
                     <a href="/transactionList" className="productlist mb-3 d-flex align-items-center gap-2">
                         <img
                             src={
-                                isActive("/Home")
+                                isActive("/transactionList")
                                     ? require("../../assets/images/transaction_focus.png")
                                     : require("../../assets/images/transaction.png")
                             }
@@ -217,10 +217,10 @@ const Sidebar = () => {
                     </a>
                 </li>
                 <li className="nav-item mb-3">
-                    <a href="/Home" className="productlist mb-3 d-flex align-items-center gap-2">
+                    <a href="#" className="productlist mb-3 d-flex align-items-center gap-2">
                         <img
                             src={
-                                isActive("/Home")
+                                isActive("#")
                                     ? require("../../assets/images/support.png")
                                     : require("../../assets/images/support.png")
                             }

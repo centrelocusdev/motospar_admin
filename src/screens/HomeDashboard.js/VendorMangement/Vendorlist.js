@@ -19,8 +19,10 @@ const Vendorlist = () => {
     };
     const {AllVendors, vendors, getSpecificVendor, setCurrentPage, currentPage, hasNext, pageCount, deleteCommon} =
         useContext(VendorContext);
-    const filterVendor = vendors.filter((vendor, index) =>
-        vendor?.store_name.toLowerCase().includes(searchTerm.toLowerCase())
+    const filterVendor = vendors.filter(
+        (vendor, index) =>
+            vendor?.store_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            vendor?.store_postal_code.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     useEffect(() => {
@@ -101,7 +103,7 @@ const Vendorlist = () => {
                                     className="input"
                                     type="text"
                                     id="search"
-                                    placeholder="Search"
+                                    placeholder="Search by name or Area code"
                                     value={searchTerm}
                                     onChange={handleSearch}
                                 />
@@ -132,6 +134,7 @@ const Vendorlist = () => {
                                     <th>ID</th>
                                     <th>Name</th>
                                     <th>Email Id</th>
+                                    <th>Area Code</th>
                                     <th>Phone Number</th>
                                     <th>Actions</th>
                                 </tr>
@@ -142,6 +145,7 @@ const Vendorlist = () => {
                                         <td>{index + 1}</td>
                                         <td>{vendor?.store_name}</td>
                                         <td>{vendor?.store_contact_email}</td>
+                                        <td>{vendor?.store_postal_code}</td>
                                         <td>{vendor?.store_contact_phone}</td>
 
                                         <td className="d-flex">

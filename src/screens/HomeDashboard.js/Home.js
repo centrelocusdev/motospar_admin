@@ -1,16 +1,21 @@
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import Dashboard from "../../components/Atoms/Dashboard";
 import Sidebar from "../../components/Atoms/Sidebar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../../assets/Css/Homedashboard.css";
 import Header from "../../components/HOC/Header";
-import {Offcanvas, Button} from "react-bootstrap"; // Import Offcanvas and Button
+import {Offcanvas} from "react-bootstrap"; // Import Offcanvas and Button
+import {VendorContext} from "../../context/VendorContext";
 
 const Home = () => {
     const [showSidebar, setShowSidebar] = useState(false); // Manage sidebar visibility on mobile
 
     const toggleSidebar = () => setShowSidebar(!showSidebar); // Function to toggle sidebar
-
+    const {AllOrders, orders, getStatistics, statisticsData} = useContext(VendorContext);
+    useEffect(() => {
+        getStatistics();
+        AllOrders();
+    }, []);
     return (
         <div className="d-flex">
             {/* Sidebar for large screens */}
@@ -37,7 +42,7 @@ const Home = () => {
             <div style={{flex: 1}}>
                 {/* Header with button to toggle sidebar */}
                 <Header title={"Dashboard"} toggleSidebar={toggleSidebar} />
-                <Dashboard />
+                <Dashboard statisticsData={statisticsData} orders={orders} />
             </div>
         </div>
     );
