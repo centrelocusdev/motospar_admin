@@ -57,6 +57,8 @@ const AddProduct = () => {
         subCategoryId: "",
         delivery_charge: null,
         delivery_time: null,
+        driver_fees: null,
+        mechanic_fees: null,
     });
 
     const handleData = (data) => {
@@ -64,7 +66,7 @@ const AddProduct = () => {
     };
 
     const handleSave = () => {
-        AddProduct({...productDetails});
+        AddProduct(productDetails);
         setShowToast(true);
 
         // Automatically hide the toast after 5 seconds

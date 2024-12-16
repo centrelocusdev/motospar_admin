@@ -41,12 +41,12 @@ const SalesGraph = ({data}) => {
                         <h5 className="mb-4">Revenue</h5>
                         <div style={{width: "100%", height: "300px"}}>
                             <ResponsiveContainer>
-                                <BarChart data={barChartData}>
+                                <BarChart data={data ? data.revenue_and_profit.last_7_days_data : null}>
                                     <CartesianGrid strokeDasharray="2 2" />
-                                    <XAxis dataKey="name" />
-                                    <YAxis tickFormatter={(value) => `₹${value.toLocaleString()}`} />
-                                    <Tooltip formatter={(value) => `₹${value.toLocaleString()}`} />
-                                    <Bar dataKey="value" fill="#FF7300" barSize={10} radius={[5, 5, 0, 0]} />
+                                    <XAxis dataKey="day" />
+                                    <YAxis tickFormatter={(day) => `₹${day.toLocaleString()}`} />
+                                    <Tooltip formatter={(daily_revenue) => `₹${daily_revenue.toLocaleString()}`} />
+                                    <Bar dataKey="daily_revenue" fill="#FF7300" barSize={10} radius={[5, 5, 0, 0]} />
                                 </BarChart>
                             </ResponsiveContainer>
                         </div>

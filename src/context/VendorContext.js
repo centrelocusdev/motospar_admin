@@ -158,28 +158,33 @@ const VendorProvider = ({children}) => {
         }
     };
 
-    const AddProduct = async (
-        name,
-        description,
-        brand,
-        model,
-        year,
-        price,
-        weight,
-        discount,
-        sku,
-        color,
-        size,
-        dimensions,
-        material,
-        features,
-        categoryId,
-        subCategoryId,
-        delivery_charge,
-        delivery_time
-    ) => {
-        setloadingactivity(true);
-        // console.log("details from addproduct>>", name, categoryId, description);
+    const AddProduct = async (productDetails) => {
+        const {
+            name,
+            description,
+            brand,
+            model,
+            year,
+            price,
+            weight,
+            discount,
+            sku,
+            color,
+            size,
+            dimensions,
+            material,
+            features,
+            categoryId,
+            subCategoryId,
+            delivery_charge,
+            delivery_time,
+            driver_fees,
+            mechanic_fees,
+            images,
+        } = productDetails;
+
+        console.log("apidata", categoryId, subCategoryId, delivery_charge, delivery_time, driver_fees, mechanic_fees);
+
         try {
             const formData = new FormData();
 
@@ -193,6 +198,9 @@ const VendorProvider = ({children}) => {
             formData.append("year", year);
             formData.append("delivery_charge", delivery_charge);
             formData.append("delivery_time", delivery_time);
+            formData.append("driver_fees", driver_fees);
+            formData.append("mechanic_fees", mechanic_fees);
+
             // Add variant details
             const variantData = {
                 price,
@@ -207,16 +215,17 @@ const VendorProvider = ({children}) => {
                 features,
             };
             formData.append("variant", JSON.stringify(variantData));
-            // formData.append("images", images);
+
+            // Add images
             if (images && images.length > 0) {
-                images?.forEach((item) => {
-                    formData.append("images", item);
-                    console.log("imagessss", item);
+                images.forEach((item) => {
+                    formData.append("images", item?.name);
                 });
             }
+
             const res = await postFormdatatAuth("admin/products/add", formData);
             console.log(">>res..AddProduct.", res);
-            console.log(">.formdata", formData);
+
             if (res?.data) {
                 settoastMessage(res?.message);
                 setloadingactivity(false);
@@ -228,9 +237,10 @@ const VendorProvider = ({children}) => {
             }
         } catch (e) {
             setloadingactivity(false);
-            console.log("errorr... in AddProduct....VEndorcontext", e);
+            console.log("errorr... in AddProduct....VendorContext", e);
         }
     };
+
     const EditProduct = async (Id, productDetails) => {
         setloadingactivity(true);
 
@@ -784,6 +794,46 @@ const VendorProvider = ({children}) => {
             console.log("errorr... in AddVariant....VEndorcontext", e);
         }
     };
+    const EditVariant = async (data) => {
+        setloadingactivity(true);
+        try {
+            const formData = new FormData();
+            console.log("imageedit", data?.images);
+            // Add product details
+            formData.append("sku", data?.sku);
+            formData.append("price", data?.price);
+            formData.append("discount", data?.discount);
+            formData.append("in_stock", data?.stock_status);
+            formData.append("color", data?.color);
+            formData.append("size", data?.size);
+            formData.append("weight", data?.weight);
+            formData.append("dimensions", data?.dimensions);
+            formData.append("material", data?.material);
+            formData.append("features", data?.features);
+            if (data?.images) {
+                if (Array.isArray(data.images) && data.images.length > 0) {
+                    data.images.forEach((item) => {
+                        formData.append("images", item); // Append the file object itself
+                    });
+                }
+            }
+            const res = await patchFormdatatAuth(`admin/variant/${data.id}/edit`, formData);
+            console.log(">>res..EditVariant.", res);
+
+            if (res?.data) {
+                settoastMessage(res?.message);
+                setloadingactivity(false);
+                setimages([]);
+            } else {
+                setloadingactivity(false);
+                alert(res?.message);
+                console.log(res?.message);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+            console.log("errorr... in EditVariant....VEndorcontext", e);
+        }
+    };
     return (
         <VendorContext.Provider
             value={{
@@ -836,6 +886,7 @@ const VendorProvider = ({children}) => {
                 statisticsData,
                 toggleProductStatus,
                 AddVariant,
+                EditVariant,
             }}
         >
             {children}

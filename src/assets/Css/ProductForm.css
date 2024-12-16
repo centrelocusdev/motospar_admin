@@ -38,30 +38,20 @@
     border-color: #007bff;
 }
 .image-upload-area {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    overflow: hidden;
-    min-height: 120px;
-    background-color: #f9f9f9; /* Optional background */
+    cursor: pointer;
 }
 
-.uploaded-files-list li {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+.image-preview-container {
+    gap: 10px;
 }
 
-.active-dropzone {
-    border-color: #007bff;
-    background-color: #f1f1f1;
+.image-preview-card {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }
 
-@media (max-width: 576px) {
-    /* Responsive text adjustments for smaller screens */
-    .uploaded-files-list li {
-        font-size: 0.9rem;
-    }
-    .image-upload-area p {
-        font-size: 0.9rem;
-    }
+.image-preview-card button {
+    background-color: #ff4d4d;
+    border: none;
 }

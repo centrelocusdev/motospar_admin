@@ -56,7 +56,10 @@ const ProductForm = ({
     const [delivery_charge, setdelivery_charge] = useState(
         specificProductData ? specificProductData?.delivery_charge : 0
     );
+
     const [delivery_time, setdelivery_time] = useState(specificProductData ? specificProductData?.delivery_time : 0);
+    const [driver_fees, setdriver_fees] = useState(specificProductData ? specificProductData?.driver_fees : 0);
+    const [mechanic_fees, setmechanic_fees] = useState(specificProductData ? specificProductData?.mechanic_fees : 0);
     const [stock_status, setstock_status] = useState(
         specificProductData?.variants && specificProductData.variants.length > 0
             ? specificProductData?.variants[0]?.in_stock
@@ -67,12 +70,11 @@ const ProductForm = ({
     const [subCategoryName, setsubCategoryName] = useState(
         specificProductData?.category ? specificProductData?.sub_category?.name : ""
     );
+    const [isChecked, setIsChecked] = useState(false);
 
-    // useEffect(() => {
-    //     setvariantId(productDetails ? productDetails?.id : specificProductData?.products?.variants[0]?.id);
-    //     setvendorPrice(productDetails?.price);
-    //     setstockQty(productDetails?.stock_quantity);
-    // }, [specificProductData, productDetails]);
+    const handleCheckboxChange = (e) => {
+        setIsChecked(e.target.checked);
+    };
 
     const handleCategoryChange = (selectedId) => {
         console.log("Selected Category id:", selectedId);
@@ -96,7 +98,7 @@ const ProductForm = ({
 
     useEffect(() => {
         if (onDataSubmit) {
-            onDataSubmit(
+            const productDetails = {
                 name,
                 description,
                 brand,
@@ -114,8 +116,12 @@ const ProductForm = ({
                 categoryId,
                 subCategoryId,
                 delivery_charge,
-                delivery_time
-            );
+                delivery_time,
+                driver_fees,
+                mechanic_fees,
+            };
+
+            onDataSubmit(productDetails);
         }
     }, [
         name,
@@ -132,13 +138,15 @@ const ProductForm = ({
         dimensions,
         material,
         features,
+        categoryId,
+        subCategoryId,
         delivery_charge,
         delivery_time,
-        handleCategoryChange,
-        handleSubCategoryChange,
+        driver_fees,
+        mechanic_fees,
         onDataSubmit,
-        updatedData,
     ]);
+
     useEffect(() => {
         if (isEdit && specificProductData) {
             updatedData({
@@ -151,6 +159,8 @@ const ProductForm = ({
                 subCategoryId,
                 delivery_charge,
                 delivery_time,
+                driver_fees,
+                mechanic_fees,
             });
         }
     }, [
@@ -166,6 +176,8 @@ const ProductForm = ({
         subCategoryId,
         delivery_charge,
         delivery_time,
+        driver_fees,
+        mechanic_fees,
     ]);
     const handleStatus = () => {
         toggleProductStatusAPI(specificProductData?.id);
@@ -310,10 +322,10 @@ const ProductForm = ({
                                         <Form.Group controlId="discuntedPrice">
                                             <Form.Label className="pt-3">Discount in percentage %</Form.Label>
                                             <Form.Control
-                                                type="Number"
+                                                type="number" // Correct type for number input
                                                 placeholder="Discount Price"
                                                 value={discount}
-                                                onChange={(e) => setdiscount(e.target.value)} // Directly handle the change
+                                                onChange={(e) => setdiscount(parseFloat(e.target.value) || null)} // Ensure value is treated as a number
                                             />
                                         </Form.Group>
                                     </Col>
@@ -344,6 +356,75 @@ const ProductForm = ({
                                 </Form.Group>
                             </Col>
                         </Row>
+                        {isEdit ? (
+                            <Row>
+                                <Col md={6}>
+                                    <Form.Group controlId="Mechanic Fee">
+                                        <Form.Label className="pt-3">Mechanic Fee</Form.Label>
+                                        <Form.Control
+                                            type="Number"
+                                            placeholder="Mechanic Fee"
+                                            value={mechanic_fees}
+                                            onChange={(e) => setmechanic_fees(parseFloat(e.target.value) || null)}
+                                        ></Form.Control>
+                                    </Form.Group>
+                                </Col>
+                                <Col md={6}>
+                                    <Form.Group controlId="Driver Fee">
+                                        <Form.Label className="pt-3">Driver Fee</Form.Label>
+                                        <Form.Control
+                                            type="Number"
+                                            placeholder="Driver Fee"
+                                            value={driver_fees}
+                                            onChange={(e) => setdriver_fees(e.target.value)}
+                                        ></Form.Control>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+                        ) : (
+                            <>
+                                <Row>
+                                    <Form>
+                                        <Form.Check
+                                            className="mt-3"
+                                            type="checkbox"
+                                            id="custom-checkbox"
+                                            label="Add Mechanic and driver fee"
+                                            checked={isChecked}
+                                            onChange={handleCheckboxChange}
+                                        />
+                                    </Form>
+                                </Row>
+                                {isChecked ? (
+                                    <Row>
+                                        <Col md={6}>
+                                            <Form.Group controlId="Mechanic Fee">
+                                                <Form.Label className="pt-3">Mechanic Fee</Form.Label>
+                                                <Form.Control
+                                                    type="Number"
+                                                    placeholder="Mechanic Fee"
+                                                    value={mechanic_fees}
+                                                    onChange={(e) =>
+                                                        setmechanic_fees(parseFloat(e.target.value) || null)
+                                                    }
+                                                ></Form.Control>
+                                            </Form.Group>
+                                        </Col>
+                                        <Col md={6}>
+                                            <Form.Group controlId="Driver Fee">
+                                                <Form.Label className="pt-3">Driver Fee</Form.Label>
+                                                <Form.Control
+                                                    type="Number"
+                                                    placeholder="Driver Fee"
+                                                    value={driver_fees}
+                                                    onChange={(e) => setdriver_fees(e.target.value)}
+                                                ></Form.Control>
+                                            </Form.Group>
+                                        </Col>
+                                    </Row>
+                                ) : null}
+                            </>
+                        )}
 
                         <Row>
                             <Col md={6}>

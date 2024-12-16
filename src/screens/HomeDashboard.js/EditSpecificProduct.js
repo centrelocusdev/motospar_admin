@@ -51,7 +51,6 @@ const EditSpecificProduct = ({route}) => {
         delivery_charge: null,
         delivery_time: 0,
     });
-    console.log("updates", productDetails?.description);
     const toggleSidebar = () => setShowSidebar(!showSidebar); // Function to toggle sidebar
     const handleUpdatedData = useCallback((data) => {
         setProductDetails(data);
@@ -131,7 +130,7 @@ const EditSpecificProduct = ({route}) => {
 
                 {/* Responsive Card Layout */}
                 <Row className="m-4">
-                    <Col xs={12} md={4} className="mb-4">
+                    {/* <Col xs={12} md={4} className="mb-4">
                         <Card>
                             <h5 className="subHeading">Images</h5>
                             <hr className="divider" />
@@ -184,9 +183,9 @@ const EditSpecificProduct = ({route}) => {
                         <Col xs={12}>
                             <ProductImageUpload />
                         </Col>
-                    </Col>
+                    </Col> */}
 
-                    <Col xs={12} md={8} className="mb-4">
+                    <Col xs={12} md={12} className="mb-4">
                         <ProductForm
                             productDetails={specificProduct}
                             ProductCategory={productCategory}
@@ -258,7 +257,21 @@ const EditSpecificProduct = ({route}) => {
                                 {specificProduct?.variants?.map((item, index) => (
                                     <tr key={item?.id}>
                                         <td>{index + 1}</td>
-                                        <td>{item?.color}</td>
+                                        <td style={{display: "flex", alignItems: "center", gap: "8px"}}>
+                                            {item?.images?.length > 0 && item.images[0]?.image && (
+                                                <img
+                                                    src={`https://motospar.thedelvierypointe.com${item.images[0].image}`}
+                                                    alt="Product Image"
+                                                    style={{
+                                                        height: "30px",
+                                                        width: "40px",
+                                                        objectFit: "cover",
+                                                        borderRadius: "4px",
+                                                    }}
+                                                />
+                                            )}
+                                            <span>{item?.color}</span>
+                                        </td>
                                         <td>{item?.sku}</td>
                                         <td>{item?.discounted_price}</td>
                                         <td>{item?.quantity_in_stock}</td>
@@ -272,21 +285,11 @@ const EditSpecificProduct = ({route}) => {
                                                 size="sm"
                                                 className="me-2"
                                                 title="Edit"
-                                                // onClick={() => {
-                                                //     console.log("isiddd", product?.product?.id);
-                                                //     setspecificProduct(product);
-                                                //     navigate("/editSpecificProductpage");
-                                                // }}
+                                                onClick={() => {
+                                                    navigate("/addvariant", {state: {variant: item}});
+                                                }}
                                             >
                                                 <AiFillEdit />
-                                            </Button>
-                                            <Button
-                                                variant="outline-danger"
-                                                size="sm"
-                                                title="Delete"
-                                                // onClick={() => handleDeleteClick(product?.id)}
-                                            >
-                                                <AiFillDelete />
                                             </Button>
                                         </td>
                                     </tr>
