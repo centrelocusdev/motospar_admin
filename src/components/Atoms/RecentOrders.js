@@ -8,7 +8,7 @@ import "../../assets/Css/ProductList.css";
 import {useNavigate} from "react-router-dom";
 const RecentOrders = ({data}) => {
     const navigate = useNavigate();
-    const filterOrder = data.filter((order) => {
+    const filterOrder = (data || [])?.filter((order) => {
         // Check if any item in order_items has the desired status
         return order.order_items?.some(
             (item) => item.order_status === "ADMIN_REVIEW" || item.order_status === "PENDING"

@@ -65,44 +65,54 @@ const NearestVendorlist = () => {
                 </div>
                 <Card className="shadow-sm rounded custom-card m-4">
                     <div className="p-4">
-                        <Table bordered hover responsive className="align-middle">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Email Id</th>
-                                    <th>Phone Number</th>
-                                    <th>Price</th>
-                                    <th>Distance</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {NearestVendor.map((vendor, index) => (
-                                    <tr key={vendor?.vendor_id}>
-                                        <td>{index + 1}</td>
-                                        <td>{vendor?.store_name}</td>
-                                        <td>{vendor?.store_contact_email}</td>
-                                        <td>{vendor?.store_contact_phone}</td>
-                                        <td>{vendor?.vendor_selling_price}</td>
-                                        <td>{vendor?.distance}</td>
-
-                                        <td className="d-flex">
-                                            <Button
-                                                size="sm"
-                                                className="savebtn"
-                                                title="Assign"
-                                                onClick={() => {
-                                                    handleAssignVendor(vendor?.vendor_id, vendor?.vendor_selling_price);
-                                                }}
-                                            >
-                                                Assign
-                                            </Button>
-                                        </td>
+                        {NearestVendor.length > 0 ? (
+                            <Table bordered hover responsive className="align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Email Id</th>
+                                        <th>Phone Number</th>
+                                        <th>Price</th>
+                                        <th>Distance</th>
+                                        <th>Actions</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </Table>
+                                </thead>
+
+                                <tbody>
+                                    {NearestVendor.map((vendor, index) => (
+                                        <tr key={vendor?.vendor_id}>
+                                            <td>{index + 1}</td>
+                                            <td>{vendor?.store_name}</td>
+                                            <td>{vendor?.store_contact_email}</td>
+                                            <td>{vendor?.store_contact_phone}</td>
+                                            <td>{vendor?.vendor_selling_price}</td>
+                                            <td>{vendor?.distance}</td>
+
+                                            <td className="d-flex">
+                                                <Button
+                                                    size="sm"
+                                                    className="savebtn"
+                                                    title="Assign"
+                                                    onClick={() => {
+                                                        handleAssignVendor(
+                                                            vendor?.vendor_id,
+                                                            vendor?.vendor_selling_price
+                                                        );
+                                                    }}
+                                                >
+                                                    Assign
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </Table>
+                        ) : (
+                            <div className="d-flex justify-content-center align-items-center" style={{height: "10vh"}}>
+                                <h4>No Vendor's Found</h4>
+                            </div>
+                        )}
                     </div>
                 </Card>
             </div>

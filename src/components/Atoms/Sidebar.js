@@ -185,6 +185,22 @@ const Sidebar = () => {
                     </a>
                 </li>
                 <li className="nav-item mb-3">
+                    <a href="/driverList" className="productlist mb-3 d-flex align-items-center gap-2">
+                        <img
+                            src={
+                                isActive("/driverList")
+                                    ? require("../../assets/images/user_focus.png")
+                                    : require("../../assets/images/user.png")
+                            }
+                            style={{
+                                width: 20,
+                                height: 20,
+                            }}
+                        />
+                        Driver Management
+                    </a>
+                </li>
+                <li className="nav-item mb-3">
                     <a href="/transactionList" className="productlist mb-3 d-flex align-items-center gap-2">
                         <img
                             src={

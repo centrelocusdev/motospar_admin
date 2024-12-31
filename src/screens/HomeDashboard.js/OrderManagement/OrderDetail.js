@@ -51,24 +51,67 @@ const OrderDetail = () => {
             <div style={{flex: 1}}>
                 <Header title={"Order Management"} toggleSidebar={toggleSidebar} />
 
-                <div className="d-flex justify-content-between align-items-center m-4">
-                    <h4>
-                        {itemdetail?.product?.name} ({orderDetail?.order_code})
-                    </h4>
-                    {itemdetail?.order_status === "ASSIGNED_TO_VENDOR" ? (
-                        ""
-                    ) : (
-                        <Button
-                            className="savebtn"
-                            onClick={() => {
-                                navigate("/nearestVendorList", {
-                                    state: {itemId: itemdetail?.id, itemName: itemdetail?.product?.name},
-                                });
-                            }}
-                        >
-                            Assign Order
-                        </Button>
-                    )}
+                <div className="row align-items-center m-4">
+                    {/* Product Name and Order Code */}
+                    <div className="col-12 col-md-6 mb-3 mb-md-0">
+                        <h4>
+                            {itemdetail?.product?.name} ({orderDetail?.order_code})
+                        </h4>
+                    </div>
+
+                    {/* Buttons */}
+                    <div className="col-12 col-md-6 text-md-end text-center">
+                        {itemdetail?.order_status === "ASSIGNED_TO_VENDOR" ? null : (
+                            <Button
+                                className="savebtn mb-0 mb-md-0"
+                                onClick={() => {
+                                    navigate("/nearestVendorList", {
+                                        state: {
+                                            itemId: itemdetail?.id,
+                                            itemName: itemdetail?.product?.name,
+                                        },
+                                    });
+                                }}
+                            >
+                                Assign Vendor
+                            </Button>
+                        )}
+                        {orderDetail?.driver_fees == "0.00" ? null : orderDetail?.driver_otp == "" ? (
+                            <Button
+                                className="savebtn ms-2 ms-md-3"
+                                onClick={() => {
+                                    navigate("/driverList", {
+                                        state: {
+                                            orderId: orderDetail?.id,
+                                            Assign: true,
+                                        },
+                                    });
+                                }}
+                            >
+                                Assign Driver
+                            </Button>
+                        ) : (
+                            <Button
+                                className="savebtn ms-2 ms-md-3"
+                                onClick={() => {
+                                    navigate("/driverList", {
+                                        state: {
+                                            orderId: orderDetail?.id,
+                                            Assign: true,
+                                        },
+                                    });
+                                }}
+                                disabled
+                                style={{
+                                    backgroundColor: "gray",
+                                    borderColor: "gray",
+                                    color: "white",
+                                }}
+                            >
+                                Assign Driver
+                            </Button>
+                        )}
+                    </div>
                 </div>
                 <div className="d-flex flex-wrap p-4">
                     <ToastComponent
@@ -85,7 +128,7 @@ const OrderDetail = () => {
                                 <Image
                                     src={
                                         orderDetail?.customer_details?.profile_picture
-                                            ? `https://motospar.thedelvierypointe.com${orderDetail?.customer_details?.profile_picture}`
+                                            ? orderDetail?.customer_details?.profile_picture
                                             : require("../../../assets/images/defaultprofile.webp")
                                     }
                                     roundedCircle
@@ -224,6 +267,13 @@ const OrderDetail = () => {
                                     <Button variant="outline-warning" className="me-3">
                                         Cancel Order
                                     </Button>
+                                </div>
+                                <div>
+                                    {orderDetail?.driver_otp == "" ? null : (
+                                        <Card.Text className="text mt-2" style={{fontSize: "1rem"}}>
+                                            OTP for Driver : {orderDetail?.driver_otp}
+                                        </Card.Text>
+                                    )}
                                 </div>
                             </Card.Body>
                         </Card>

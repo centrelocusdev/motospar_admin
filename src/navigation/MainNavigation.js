@@ -27,6 +27,8 @@ import ProductRequestList from "../screens/HomeDashboard.js/RequestManagement/Pr
 import SpecifcProductList from "../screens/HomeDashboard.js/RequestManagement/SpecificProductRequest";
 import AddVariant from "../screens/HomeDashboard.js/AddVariant";
 import TransectionList from "../screens/HomeDashboard.js/Transection/TransectionList";
+import Driverlist from "../screens/HomeDashboard.js/DriverManagement/DriverList";
+import DriverDetail from "../screens/HomeDashboard.js/DriverManagement/DriverDetail";
 
 const AuthNavigation = () => {
     return (
@@ -63,6 +65,8 @@ const HomeNavigation = () => {
                 <Route path="/specificProductRequest" element={<SpecifcProductList />} />
                 <Route path="/addvariant" element={<AddVariant />} />
                 <Route path="/transactionList" element={<TransectionList />} />
+                <Route path="/driverList" element={<Driverlist />} />
+                <Route path="/driverDetail" element={<DriverDetail />} />
                 {/*<Route path="/addProductRequest" element={<AddProductRequest />} />
                  */}
                 <Route path="*" element={<Navigate to="/home" />} />

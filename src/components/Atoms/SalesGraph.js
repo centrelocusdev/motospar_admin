@@ -14,16 +14,6 @@ import {
 } from "recharts";
 import {Card, Row, Col} from "react-bootstrap";
 
-const barChartData = [
-    {name: "01", value: 150000},
-    {name: "02", value: 300000},
-    {name: "03", value: 300000},
-    {name: "04", value: 150000},
-    {name: "05", value: 300000},
-    {name: "06", value: 300000},
-    {name: "07", value: 300000},
-];
-
 const pieChartData = [
     {name: "Helmet", value: 65, color: "#FF7300"},
     {name: "Tyre", value: 15, color: "#0088FE"},
@@ -32,6 +22,10 @@ const pieChartData = [
 ];
 
 const SalesGraph = ({data}) => {
+    const transformedData = Object.entries(data?.revenue_and_profit?.last_7_days_data || {}).map(([item]) => ({
+        value: item?.daily_revenue, // Y-axis value (revenue)
+        name: item?.day, // X-axis label (date)
+    }));
     return (
         <Row className="g-4">
             {/* Revenue Bar Chart */}
@@ -40,15 +34,24 @@ const SalesGraph = ({data}) => {
                     <Card.Body>
                         <h5 className="mb-4">Revenue</h5>
                         <div style={{width: "100%", height: "300px"}}>
-                            <ResponsiveContainer>
-                                <BarChart data={data ? data.revenue_and_profit.last_7_days_data : null}>
-                                    <CartesianGrid strokeDasharray="2 2" />
-                                    <XAxis dataKey="day" />
-                                    <YAxis tickFormatter={(day) => `₹${day.toLocaleString()}`} />
-                                    <Tooltip formatter={(daily_revenue) => `₹${daily_revenue.toLocaleString()}`} />
-                                    <Bar dataKey="daily_revenue" fill="#FF7300" barSize={10} radius={[5, 5, 0, 0]} />
-                                </BarChart>
-                            </ResponsiveContainer>
+                            {data?.revenue_and_profit?.last_7_days_data > 0 ? (
+                                <ResponsiveContainer>
+                                    <BarChart data={transformedData}>
+                                        <CartesianGrid strokeDasharray="2 2" />
+                                        <XAxis dataKey="day" />
+                                        <YAxis tickFormatter={(day) => `₹${day.toLocaleString()}`} />
+                                        <Tooltip formatter={(daily_revenue) => `₹${daily_revenue.toLocaleString()}`} />
+                                        <Bar
+                                            dataKey="daily_revenue"
+                                            fill="#FF7300"
+                                            barSize={10}
+                                            radius={[5, 5, 0, 0]}
+                                        />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            ) : (
+                                <h4>No data</h4>
+                            )}
                         </div>
                     </Card.Body>
                 </Card>

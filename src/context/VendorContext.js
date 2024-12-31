@@ -34,6 +34,7 @@ const VendorProvider = ({children}) => {
     const [toastMessage, settoastMessage] = useState("");
     const [images, setimages] = useState([]);
     const [users, setusers] = useState([]);
+    const [drivers, setdrivers] = useState([]);
     const [userDetail, setuserDetail] = useState("");
     const [vendoritem, setvendoritem] = useState([]);
     const [orders, setorders] = useState([]);
@@ -182,8 +183,6 @@ const VendorProvider = ({children}) => {
             mechanic_fees,
             images,
         } = productDetails;
-
-        console.log("apidata", categoryId, subCategoryId, delivery_charge, delivery_time, driver_fees, mechanic_fees);
 
         try {
             const formData = new FormData();
@@ -834,6 +833,188 @@ const VendorProvider = ({children}) => {
             console.log("errorr... in EditVariant....VEndorcontext", e);
         }
     };
+    const addDriver = async (
+        first_name,
+        last_name,
+        email,
+        phone_number,
+        profile_picture,
+        license_number,
+        license_type,
+        license_status,
+        license_expiry_date,
+        is_available,
+        employment_status,
+        address_line_1,
+        address_line_2,
+        city,
+        state,
+        postal_code,
+        country,
+        total_deliveries,
+        rating,
+        emergency_contact_phone
+    ) => {
+        setloadingactivity(true);
+        try {
+            const formData = new FormData();
+
+            // Add product details
+            formData.append("first_name", first_name);
+            formData.append("last_name", last_name);
+            formData.append("email", email);
+            formData.append("phone_number", phone_number);
+            formData.append("emergency_contact_phone", emergency_contact_phone);
+            formData.append("profile_picture", profile_picture);
+            formData.append("license_number", license_number);
+            formData.append("license_type", license_type);
+            formData.append("license_status", license_status);
+            formData.append("license_expiry_date", license_expiry_date);
+            formData.append("is_available", is_available);
+            formData.append("employment_status", employment_status);
+            formData.append("address_line_1", address_line_1);
+            formData.append("address_line_2", address_line_2);
+            formData.append("city", city);
+            formData.append("state", state);
+            formData.append("postal_code", postal_code);
+            formData.append("country", country);
+            formData.append("total_deliveries", total_deliveries);
+            formData.append("rating", rating);
+            const res = await postFormdatatAuth("admin/driver/add", formData);
+            console.log(">>res..addDriver.", res);
+
+            if (res?.data) {
+                settoastMessage(res?.message);
+                setloadingactivity(false);
+            } else {
+                setloadingactivity(false);
+                alert(res?.message);
+                console.log(res?.message);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+            console.log("errorr... in addDriver....VEndorcontext", e);
+        }
+    };
+    const AllDrivers = async (page) => {
+        setloadingactivity(true);
+        try {
+            const offset = (page - 1) * 10;
+
+            var body = {
+                limit: 10,
+                offset: page ? offset : 0,
+            };
+
+            const res = await postAuth("admin/driver/view", body);
+            console.log(">>res..drivers.", res);
+
+            if (res?.data) {
+                console.log(res?.data);
+                setdrivers(res?.data?.drivers);
+                setTotalCount(res?.data?.total_count);
+                setPageCount(res?.data?.page_count);
+                setHasNext(res?.data?.has_next);
+                setCurrentPage(res?.data?.current_page);
+                setloadingactivity(false);
+            } else {
+                setloadingactivity(false);
+                alert(res?.message);
+                console.log(res?.message);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+            console.log("errorr... in All Drivers....VEndorcontext", e);
+        }
+    };
+    const assignDriver = async (order_id, driver_id) => {
+        setloadingactivity(true);
+        try {
+            var body = {
+                order_id,
+                driver_id,
+            };
+            const res = await postAuth("admin/order/assign-driver", body);
+            console.log(">>res..assignDriver.", res);
+
+            if (res?.data) {
+                settoastMessage(res?.message);
+                setloadingactivity(false);
+            } else {
+                setloadingactivity(false);
+                alert(res?.message);
+                console.log(res?.message);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+            console.log("errorr... in assignDriver....VEndorcontext", e);
+        }
+    };
+    const EditDriver = async (data) => {
+        setloadingactivity(true);
+        try {
+            const formData = new FormData();
+
+            // Add product details
+            formData.append("first_name", data?.first_name);
+            formData.append("last_name", data?.last_name);
+            formData.append("email", data?.email);
+            formData.append("phone_number", data?.phone_number);
+            formData.append("emergency_contact_phone", data?.emergency_contact_phone);
+            formData.append("license_number", data?.license_number);
+            formData.append("license_type", data?.license_type);
+            formData.append("license_status", data?.license_status);
+            formData.append("license_expiry_date", data?.license_expiry_date);
+            formData.append("is_available", data?.is_available);
+            formData.append("employment_status", data?.employment_status);
+            formData.append("address_line_1", data?.address_line_1);
+            formData.append("address_line_2", data?.address_line_2);
+            formData.append("city", data?.city);
+            formData.append("state", data?.state);
+            formData.append("postal_code", data?.postal_code);
+            formData.append("country", data?.country);
+            formData.append("total_deliveries", data?.total_deliveries);
+            formData.append("rating", data?.rating);
+            if (data.profile_image) {
+                formData.append("profile_picture", data?.profile_image); // Add image only if it's present
+            }
+
+            const res = await patchFormdatatAuth(`admin/driver/${data?.Id}/edit`, formData);
+            console.log(">>res..EditDriver.", res);
+
+            if (res?.data) {
+                settoastMessage(res?.message);
+
+                setloadingactivity(false);
+            } else {
+                setloadingactivity(false);
+                settoastMessage(res?.message);
+                console.log(res?.message);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+            console.log("errorr... in EditDriver....VEndorcontext", e);
+        }
+    };
+    const deleteDriver = async (driver_id) => {
+        setloadingactivity(true);
+        try {
+            const res = await postAuth(`admin/driver/${driver_id}/delete`);
+            console.log(">>res..deleteDriver.", res);
+
+            if (res?.data) {
+                settoastMessage(res?.message);
+                setloadingactivity(false);
+            } else {
+                setloadingactivity(false);
+                alert(res?.message);
+                console.log(res?.message);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+            console.log("errorr... in deleteDriver....VEndorcontext", e);
+        }
+    };
     return (
         <VendorContext.Provider
             value={{
@@ -857,6 +1038,7 @@ const VendorProvider = ({children}) => {
                 setvariantId,
                 variantId,
                 vendors,
+                settoastMessage,
                 toastMessage,
                 setimages,
                 images,
@@ -887,6 +1069,12 @@ const VendorProvider = ({children}) => {
                 toggleProductStatus,
                 AddVariant,
                 EditVariant,
+                addDriver,
+                AllDrivers,
+                drivers,
+                assignDriver,
+                EditDriver,
+                deleteDriver,
             }}
         >
             {children}
