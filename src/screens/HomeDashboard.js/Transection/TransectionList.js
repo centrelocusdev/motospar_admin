@@ -13,16 +13,17 @@ const TransectionList = () => {
     const handleSearch = (event) => {
         setSearchTerm(event.target.value);
     };
-    const {AllUsers, users, setuserDetail, setCurrentPage, currentPage, hasNext, pageCount} = useContext(VendorContext);
+    const {AllOrders, orders, setuserDetail, setCurrentPage, currentPage, hasNext, pageCount} =
+        useContext(VendorContext);
 
     // const filteruser = users.filter((user, index) => user?.full_name.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const [showSidebar, setShowSidebar] = useState(false); // Manage sidebar visibility on mobile
 
     const toggleSidebar = () => setShowSidebar(!showSidebar); // Function to toggle sidebar
-    // useEffect(() => {
-    //     AllUsers(currentPage);
-    // }, [currentPage]);
+    useEffect(() => {
+        AllOrders(currentPage);
+    }, [currentPage]);
 
     const handleNextPage = () => {
         if (hasNext) {
@@ -96,43 +97,38 @@ const TransectionList = () => {
                         <Table bordered hover responsive className="align-middle">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>Order ID</th>
+                                    <th>Payment ID</th>
                                     <th>Name</th>
-                                    <th>Email Id</th>
                                     <th>Phone Number</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
+                                    <th>Amount</th>
+                                    <th>Payment Mode</th>
+                                    <th>Payment Status</th>
+                                    <th>Date</th>
+                                    <th>Transaction ID</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* {filteruser.map((user, index) => (
-                                    <tr key={user?.id}>
-                                        <td>{index + 1}</td>
-                                        <td>{user?.full_name}</td>
-                                        <td>{user?.email}</td>
-                                        <td>{user?.phone_number ? user?.phone_number : "N/A"}</td>
-                                        <td>{user?.is_active ? "Active" : "InActive"}</td>
-                                        <td className="d-flex">
-                                            <Button
-                                                variant="outline-primary"
-                                                size="sm"
-                                                className="me-2"
-                                                title="View"
-                                                onClick={() => {
-                                                    // getSpecificVendor(vendor?.user);
-                                                    // setuserDetail(user);
-                                                    navigate("/userDetail", {state: {userDetail: user}});
-                                                }}
-                                            >
-                                                <FaEye />
-                                            </Button>
-
-                                            <Button variant="outline-danger" size="sm" title="Delete">
-                                                <AiFillDelete />
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                ))} */}
+                                {orders.map(
+                                    (user, index) =>
+                                        user?.payment_method === "PAYMENT_GATEWAY" && (
+                                            <tr key={index}>
+                                                <td>{user?.order_code}</td>
+                                                <td>{user?.payment_id ? user?.payment_id : "N/A"}</td>
+                                                <td>{user?.customer_details?.full_name}</td>
+                                                <td>
+                                                    {user?.customer_details?.phone_number
+                                                        ? user?.customer_details?.phone_number
+                                                        : "N/A"}
+                                                </td>
+                                                <td>{user?.total_price}</td>
+                                                <td>{user?.payment_method}</td>
+                                                <td>{user?.payment_status === "SUCCESS" ? "SUCCESS" : "FAILED"}</td>
+                                                <td>{dayjs(user?.created_at).format("YYYY-MM-DD")}</td>
+                                                <td>{user?.provider_order_id ? user?.provider_order_id : "N/A"}</td>
+                                            </tr>
+                                        )
+                                )}
                             </tbody>
                         </Table>
                     </div>

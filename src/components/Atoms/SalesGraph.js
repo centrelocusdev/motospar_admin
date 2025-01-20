@@ -14,18 +14,24 @@ import {
 } from "recharts";
 import {Card, Row, Col} from "react-bootstrap";
 
-const pieChartData = [
-    {name: "Helmet", value: 65, color: "#FF7300"},
-    {name: "Tyre", value: 15, color: "#0088FE"},
-    {name: "Seat Cover", value: 10, color: "#FFBB28"},
-    {name: "Other", value: 5, color: "#FF8042"},
-];
-
+// [
+//     {name: "Helmet", value: 65, color: "#FF7300"},
+//     {name: "Tyre", value: 15, color: "#0088FE"},
+//     {name: "Seat Cover", value: 10, color: "#FFBB28"},
+//     {name: "Other", value: 5, color: "#FF8042"},
+// ];
 const SalesGraph = ({data}) => {
     const transformedData = Object.entries(data?.revenue_and_profit?.last_7_days_data || {}).map(([item]) => ({
         value: item?.daily_revenue, // Y-axis value (revenue)
         name: item?.day, // X-axis label (date)
     }));
+    const pieChartData = Object.entries(data?.category_distribution || {}).map(([key, item]) => ({
+        value: parseFloat(item?.category_revenue) || 0, // Y-axis value (revenue)
+        name: item?.variant__product__sub_category__name, // X-axis label (sub-category name)
+    }));
+
+    // Define an array of colors for the pie chart
+    const colors = ["#Ff0000", "#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
     return (
         <Row className="g-4">
             {/* Revenue Bar Chart */}
@@ -76,7 +82,7 @@ const SalesGraph = ({data}) => {
                                         label={({percent}) => `${(percent * 100).toFixed(0)}%`}
                                     >
                                         {pieChartData.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={entry.color} />
+                                            <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
                                         ))}
                                     </Pie>
                                     <Legend verticalAlign="bottom" align="center" />
