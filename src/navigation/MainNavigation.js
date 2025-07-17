@@ -1,10 +1,10 @@
 import React from "react";
-import {Routes, Route, Navigate} from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
-import {AuthProvider} from "../context/AuthContext";
-import {useSelector} from "react-redux";
+import { AuthProvider } from "../context/AuthContext";
+import { useSelector } from "react-redux";
 
-import {VendorProvider} from "../context/VendorContext";
+import { VendorProvider } from "../context/VendorContext";
 
 import Login from "../screens/Auth/Login";
 import Register from "../screens/Auth/Register";
@@ -29,6 +29,10 @@ import AddVariant from "../screens/HomeDashboard.js/AddVariant";
 import TransectionList from "../screens/HomeDashboard.js/Transection/TransectionList";
 import Driverlist from "../screens/HomeDashboard.js/DriverManagement/DriverList";
 import DriverDetail from "../screens/HomeDashboard.js/DriverManagement/DriverDetail";
+import AddProductbyCsv from "../screens/HomeDashboard.js/AddProductbyCsv";
+import MechanicList from "../screens/HomeDashboard.js/MechanicMangement/MechanicList";
+import MechanicDetail from "../screens/HomeDashboard.js/MechanicMangement/MechanicDetail";
+import NearestMechanic from "../screens/HomeDashboard.js/OrderManagement/NearestMechnaic";
 
 const AuthNavigation = () => {
     return (
@@ -50,6 +54,7 @@ const HomeNavigation = () => {
             <Routes>
                 <Route path="/home" element={<Home />} />
                 <Route path="/addProduct" element={<AddProduct />} />
+                <Route path="/addProductbyCsv" element={<AddProductbyCsv />} />
                 <Route path="/addSubCategory" element={<AddSubCategory />} />
                 <Route path="/MyProfile" element={<Profile />} />
                 <Route path="/productList" element={<ProductList />} />
@@ -67,6 +72,9 @@ const HomeNavigation = () => {
                 <Route path="/transactionList" element={<TransectionList />} />
                 <Route path="/driverList" element={<Driverlist />} />
                 <Route path="/driverDetail" element={<DriverDetail />} />
+                <Route path="/mechanicList" element={<MechanicList />} />
+                <Route path="/mechanicDetail" element={<MechanicDetail />} />
+                <Route path="/nearestMechanic" element={<NearestMechanic />} />
                 {/*<Route path="/addProductRequest" element={<AddProductRequest />} />
                  */}
                 <Route path="*" element={<Navigate to="/home" />} />

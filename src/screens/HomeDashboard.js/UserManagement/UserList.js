@@ -1,23 +1,25 @@
 import React, {useContext, useEffect, useState} from "react";
 import Sidebar from "../../../components/Atoms/Sidebar";
 import Header from "../../../components/HOC/Header";
-import {Table, Form, InputGroup, Button, Pagination, Badge, Card, Offcanvas} from "react-bootstrap";
-import {AiOutlineSearch, AiFillEdit, AiFillDelete} from "react-icons/ai";
+import {Table, Button, Card, Offcanvas} from "react-bootstrap";
+import {AiOutlineSearch, AiFillDelete} from "react-icons/ai";
 import dayjs from "dayjs";
 import "../../../assets/Css/ProductList.css";
 import {useNavigate} from "react-router-dom";
 import {FaEye, FaArrowLeft, FaArrowRight} from "react-icons/fa";
 import {VendorContext} from "../../../context/VendorContext";
+
 const UserList = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const handleSearch = (event) => {
         setSearchTerm(event.target.value);
     };
     const {AllUsers, users, setuserDetail, setCurrentPage, currentPage, hasNext, pageCount} = useContext(VendorContext);
-    const filteruser = users.filter((user, index) => user?.full_name.toLowerCase().includes(searchTerm.toLowerCase()));
+    const filteruser = users.filter((user) => user?.full_name.toLowerCase().includes(searchTerm.toLowerCase()));
     const [showSidebar, setShowSidebar] = useState(false); // Manage sidebar visibility on mobile
-
     const toggleSidebar = () => setShowSidebar(!showSidebar); // Function to toggle sidebar
+    const navigate = useNavigate();
+
     useEffect(() => {
         AllUsers(currentPage);
     }, [currentPage]);
@@ -33,23 +35,25 @@ const UserList = () => {
             setCurrentPage((prevPage) => prevPage - 1);
         }
     };
-    const navigate = useNavigate();
+
     return (
-        <div className="d-flex">
+        <div className="d-flex flex-column flex-md-row">
+            {/* Sidebar visible on large screens */}
             <div className="d-none d-md-block">
-                <Sidebar /> {/* Sidebar visible on large screens */}
+                <Sidebar />
             </div>
 
             {/* Offcanvas Sidebar for small screens */}
             <Offcanvas
                 show={showSidebar}
                 onHide={toggleSidebar}
-                className="bg-dark text-white"
-                style={{width: "300px"}}
+                style={{width: "100vh", backgroundColor: "#262D34", color: "white"}} // Custom color for the background
             >
-                <Offcanvas.Header closeButton></Offcanvas.Header>
+                <Offcanvas.Header closeButton>
+                    <Offcanvas.Title className="text-white">Menu</Offcanvas.Title>
+                </Offcanvas.Header>
                 <Offcanvas.Body>
-                    <Sidebar /> {/* Sidebar content */}
+                    <Sidebar />
                 </Offcanvas.Body>
             </Offcanvas>
             <div style={{flex: 1}}>
@@ -59,11 +63,11 @@ const UserList = () => {
                 </div>
                 <Card className="shadow-sm rounded custom-card m-4">
                     <div className="p-4">
-                        <div className="d-flex justify-content-between align-items-center mb-3">
-                            <div className="wrapper">
+                        <div className="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3">
+                            <div className="wrapper flex-grow-1 mb-3 mb-md-0">
                                 <AiOutlineSearch className="icon" />
                                 <input
-                                    className="input"
+                                    className="input w-100"
                                     type="text"
                                     id="search"
                                     placeholder="Search"
@@ -71,7 +75,7 @@ const UserList = () => {
                                     onChange={handleSearch}
                                 />
                             </div>
-                            <div className="d-flex justify-content-between align-items-center">
+                            <div className="d-flex align-items-center">
                                 <span className="m-1">
                                     Page {currentPage} of {pageCount}
                                 </span>
@@ -109,16 +113,14 @@ const UserList = () => {
                                         <td>{user?.full_name}</td>
                                         <td>{user?.email}</td>
                                         <td>{user?.phone_number ? user?.phone_number : "N/A"}</td>
-                                        <td>{user?.is_active ? "Active" : "InActive"}</td>
-                                        <td className="d-flex">
+                                        <td>{user?.is_active ? "Active" : "Inactive"}</td>
+                                        <td className="d-flex justify-content-between">
                                             <Button
                                                 variant="outline-primary"
                                                 size="sm"
                                                 className="me-2"
                                                 title="View"
                                                 onClick={() => {
-                                                    // getSpecificVendor(vendor?.user);
-                                                    // setuserDetail(user);
                                                     navigate("/userDetail", {state: {userDetail: user}});
                                                 }}
                                             >

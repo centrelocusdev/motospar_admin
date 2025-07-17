@@ -172,11 +172,10 @@ const DriverDetail = () => {
             <Offcanvas
                 show={showSidebar}
                 onHide={toggleSidebar}
-                className="bg-dark text-white"
-                style={{width: "250px"}}
+                style={{width: "100vh", backgroundColor: "#262D34", color: "white"}} // Custom color for the background
             >
                 <Offcanvas.Header closeButton>
-                    <Offcanvas.Title></Offcanvas.Title>
+                    <Offcanvas.Title className="text-white">Menu</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Sidebar />

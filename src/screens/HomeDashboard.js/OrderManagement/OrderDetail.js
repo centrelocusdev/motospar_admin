@@ -1,14 +1,14 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Sidebar from "../../../components/Atoms/Sidebar";
 import Header from "../../../components/HOC/Header";
-import {VendorContext} from "../../../context/VendorContext";
-import {Card, Button, Image, Col, Form, Row, Offcanvas} from "react-bootstrap";
-import {FaPhoneAlt, FaEnvelope, FaGlobe, FaMapMarkerAlt, FaMoneyBillWave, FaFileInvoice} from "react-icons/fa";
+import { VendorContext } from "../../../context/VendorContext";
+import { Card, Button, Image, Col, Form, Row, Offcanvas } from "react-bootstrap";
+import { FaPhoneAlt, FaEnvelope, FaGlobe, FaMapMarkerAlt, FaMoneyBillWave, FaFileInvoice } from "react-icons/fa";
 import dayjs from "dayjs";
-import {useLocation, useNavigate} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ToastComponent from "../../../components/HOC/Toast";
 const OrderDetail = () => {
-    const {updateProductStatus, toastMessage} = useContext(VendorContext);
+    const { updateProductStatus, toastMessage } = useContext(VendorContext);
     const navigate = useNavigate();
     const location = useLocation();
     const orderDetail = location.state?.orderDetail;
@@ -28,6 +28,7 @@ const OrderDetail = () => {
             setShowToast(false);
         }, 5000); //
     };
+    console.log("orderDetail", itemdetail)
     return (
         <div className="d-flex">
             <div className="d-none d-md-block">
@@ -38,17 +39,16 @@ const OrderDetail = () => {
             <Offcanvas
                 show={showSidebar}
                 onHide={toggleSidebar}
-                className="bg-dark text-white"
-                style={{width: "250px"}}
+                style={{ width: "100vh", backgroundColor: "#262D34", color: "white" }} // Custom color for the background
             >
                 <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>Menu</Offcanvas.Title>
+                    <Offcanvas.Title className="text-white">Menu</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-                    <Sidebar /> {/* Sidebar content */}
+                    <Sidebar />
                 </Offcanvas.Body>
             </Offcanvas>
-            <div style={{flex: 1}}>
+            <div style={{ flex: 1 }}>
                 <Header title={"Order Management"} toggleSidebar={toggleSidebar} />
 
                 <div className="row align-items-center m-4">
@@ -111,6 +111,21 @@ const OrderDetail = () => {
                                 Assign Driver
                             </Button>
                         )}
+                        {itemdetail?.mechanic_fees_for_customer == "0.00" || itemdetail?.mechanic !== null ? null :
+                            <Button
+                                className="savebtn ms-2 ms-md-3"
+                                onClick={() => {
+                                    navigate("/nearestMechanic", {
+                                        state: {
+                                            item: itemdetail,
+                                            Assign: true,
+                                        },
+                                    });
+                                }}
+                            >
+                                Assign Mechanic
+                            </Button>
+                        }
                     </div>
                 </div>
                 <div className="d-flex flex-wrap p-4">
@@ -121,7 +136,7 @@ const OrderDetail = () => {
                         onClose={() => setShowToast(false)}
                     />
                     <div className="mt-0">
-                        <Card className=" shadow-sm" style={{Width: "auto", margin: "auto"}}>
+                        <Card className=" shadow-sm" style={{ Width: "auto", margin: "auto" }}>
                             <h5 className="subHeading">Customer Details</h5>
                             <hr className="divider " />
                             <div className="d-flex justify-content-center mt-3  ">
@@ -145,13 +160,13 @@ const OrderDetail = () => {
                                 <Card.Title className=" mb-1">
                                     <h5>{orderDetail?.customer_details?.full_name}</h5>
                                 </Card.Title>
-                                <Card.Text className="text-muted mb-4" style={{fontSize: "0.9rem"}}>
+                                <Card.Text className="text-muted mb-4" style={{ fontSize: "0.9rem" }}>
                                     User ID: ADV-896523alrjgakjdsnglakjsdngljSH
                                 </Card.Text>
 
                                 <Card.Text className="d-flex align-items-center ">
                                     <FaPhoneAlt className="me-2 " />{" "}
-                                    <Card.Text className="text-muted " style={{fontSize: "0.9rem"}}>
+                                    <Card.Text className="text-muted " style={{ fontSize: "0.9rem" }}>
                                         {orderDetail?.customer_details?.phone_number
                                             ? orderDetail?.customer_details?.phone_number
                                             : "N/A"}
@@ -159,7 +174,7 @@ const OrderDetail = () => {
                                 </Card.Text>
                                 <Card.Text className="d-flex align-items-center">
                                     <FaEnvelope className="me-2" />{" "}
-                                    <Card.Text className="text-muted " style={{fontSize: "0.9rem"}}>
+                                    <Card.Text className="text-muted " style={{ fontSize: "0.9rem" }}>
                                         {orderDetail?.customer_details?.email
                                             ? orderDetail?.customer_details?.email
                                             : "N/A"}
@@ -167,7 +182,7 @@ const OrderDetail = () => {
                                 </Card.Text>
                                 <Card.Text className="d-flex align-items-center">
                                     <FaMapMarkerAlt className="me-2" />{" "}
-                                    <Card.Text className="text-muted " style={{fontSize: "0.9rem"}}>
+                                    <Card.Text className="text-muted " style={{ fontSize: "0.9rem" }}>
                                         {orderDetail?.shipping_address_details
                                             ? `${orderDetail?.shipping_address_details?.street_address}, ${orderDetail?.shipping_address_details?.city}, ${orderDetail?.shipping_address_details?.state}, ${orderDetail?.shipping_address_details?.postal_code}`
                                             : "N/A"}
@@ -179,7 +194,7 @@ const OrderDetail = () => {
                             <Card.Body>
                                 <Card.Text className="d-flex align-items-center ">
                                     <FaMoneyBillWave className="me-2" />{" "}
-                                    <Card.Text className="text-muted " style={{fontSize: "0.9rem"}}>
+                                    <Card.Text className="text-muted " style={{ fontSize: "0.9rem" }}>
                                         Cash On Delivery
                                     </Card.Text>
                                 </Card.Text>
@@ -189,19 +204,19 @@ const OrderDetail = () => {
                             <Card.Body>
                                 <Card.Text className="d-flex align-items-center justify-content-between ">
                                     <div>
-                                        <Card.Text className="text-muted " style={{fontSize: "0.9rem"}}>
+                                        <Card.Text className="text-muted " style={{ fontSize: "0.9rem" }}>
                                             Delivery Charge
                                         </Card.Text>
-                                        <Card.Text className="text-muted " style={{fontSize: "0.9rem"}}>
+                                        <Card.Text className="text-muted " style={{ fontSize: "0.9rem" }}>
                                             Total of ({orderDetail?.order_items.length}{" "}
                                             {orderDetail?.order_items.length > 1 ? "items" : "item"})
                                         </Card.Text>
                                     </div>
                                     <div>
-                                        <Card.Text className="text-muted " style={{fontSize: "0.9rem"}}>
+                                        <Card.Text className="text-muted " style={{ fontSize: "0.9rem" }}>
                                             {itemdetail?.product?.delivery_charge}
                                         </Card.Text>
-                                        <Card.Text className="text-muted " style={{fontSize: "0.9rem"}}>
+                                        <Card.Text className="text-muted " style={{ fontSize: "0.9rem" }}>
                                             {orderDetail?.total_price}
                                         </Card.Text>
                                     </div>
@@ -209,17 +224,17 @@ const OrderDetail = () => {
                             </Card.Body>
                         </Card>
                     </div>
-                    <div style={{flex: 1, height: "auto"}}>
+                    <div style={{ flex: 1, height: "auto" }}>
                         <Card className="shadow-sm rounded ms-5">
                             <h5 className="subHeading">Order Action</h5>
                             <hr className="divider " />
                             <Card.Body>
                                 <div className="d-flex align-items-center justify-content-between ">
                                     <div>
-                                        <Card.Text className="text mb-1" style={{fontSize: "1rem"}}>
+                                        <Card.Text className="text mb-1" style={{ fontSize: "1rem" }}>
                                             #{orderDetail?.order_code}
                                         </Card.Text>
-                                        <Card.Text className="text-muted mb-1" style={{fontSize: "0.8rem"}}>
+                                        <Card.Text className="text-muted mb-1" style={{ fontSize: "0.8rem" }}>
                                             {dayjs(orderDetail?.created_at).format("MMMM D, YYYY [at] h:mm A")}
                                         </Card.Text>
                                     </div>
@@ -250,7 +265,7 @@ const OrderDetail = () => {
                                 </Col>
                                 <div className="d-flex align-items-center justify-content-between mt-3">
                                     <div>
-                                        <Card.Text className="text mb-1" style={{fontSize: "1rem"}}>
+                                        <Card.Text className="text mb-1" style={{ fontSize: "1rem" }}>
                                             Shipped with India Post
                                         </Card.Text>
                                     </div>
@@ -270,7 +285,7 @@ const OrderDetail = () => {
                                 </div>
                                 <div>
                                     {orderDetail?.driver_otp == "" ? null : (
-                                        <Card.Text className="text mt-2" style={{fontSize: "1rem"}}>
+                                        <Card.Text className="text mt-2" style={{ fontSize: "1rem" }}>
                                             OTP for Driver : {orderDetail?.driver_otp}
                                         </Card.Text>
                                     )}

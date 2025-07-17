@@ -94,7 +94,7 @@ const SummaryCards = ({data}) => {
                                 <h5>Buyers</h5>
                                 <h2>{formatNumber(data?.user_statistics?.active_customers)}</h2>
                             </div>
-                            <img src={require("../../assets/images/ship.png")} alt="Buyers" className="summary-icon" />
+                            <img src={require("../../assets/images/buyer.png")} alt="Buyers" className="summary-icon" />
                         </div>
                         <p
                             className={
@@ -124,7 +124,7 @@ const SummaryCards = ({data}) => {
                                 <h2>{formatNumber(data?.user_statistics?.active_vendors)}</h2>
                             </div>
                             <img
-                                src={require("../../assets/images/pending.png")}
+                                src={require("../../assets/images/vendor.png")}
                                 alt="Vendors"
                                 className="summary-icon"
                             />

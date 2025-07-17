@@ -7,7 +7,7 @@ import {FaEye, FaArrowLeft, FaArrowRight, FaPhoneAlt, FaEnvelope, FaGlobe} from 
 import {AiOutlineSearch, AiFillEdit, AiFillDelete} from "react-icons/ai";
 import dayjs from "dayjs";
 import {useLocation, useNavigate} from "react-router-dom";
-
+import {FaCheckCircle} from "react-icons/fa";
 const VendorDetail = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -72,11 +72,10 @@ const VendorDetail = () => {
             <Offcanvas
                 show={showSidebar}
                 onHide={toggleSidebar}
-                className="bg-dark text-white"
-                style={{width: "250px"}}
+                style={{width: "100vh", backgroundColor: "#262D34", color: "white"}} // Custom color for the background
             >
                 <Offcanvas.Header closeButton>
-                    <Offcanvas.Title></Offcanvas.Title>
+                    <Offcanvas.Title className="text-white">Menu</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                     <Sidebar />
@@ -117,11 +116,24 @@ const VendorDetail = () => {
                                 />
                             </div>
                             <Card.Body>
-                                <Card.Title className="mt-2 mb-1">
-                                    <h5>{vendorDetail?.store_name}</h5>
+                                <Card.Title
+                                    className="mt-2 mb-1"
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        justifySelf: "center",
+                                    }}
+                                >
+                                    <h5 className="mb-0">
+                                        {vendorDetail?.first_name} {vendorDetail?.last_name}
+                                    </h5>
+                                    {vendorDetail?.is_verified && (
+                                        <FaCheckCircle className="ms-2" style={{color: "green", fontSize: "20px"}} />
+                                    )}
                                 </Card.Title>
                                 <Card.Text className="text-muted mb-4" style={{fontSize: "0.9rem"}}>
-                                    Vendor ID: ADV-896523alrjgakjdsnglakjsdngljSH
+                                    Vendor ID: {vendorId}
                                 </Card.Text>
 
                                 <Card.Text className="d-flex align-items-center">
@@ -133,7 +145,7 @@ const VendorDetail = () => {
                                 <Card.Text className="d-flex align-items-center">
                                     <FaEnvelope className="me-2" />
                                     <span className="text-muted" style={{fontSize: "0.9rem"}}>
-                                        {vendorDetail?.store_contact_email}
+                                        {vendorDetail?.email}
                                     </span>
                                 </Card.Text>
                                 <Card.Text className="d-flex align-items-center">

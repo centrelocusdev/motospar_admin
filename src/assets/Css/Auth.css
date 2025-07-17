@@ -387,4 +387,9 @@
     .footer {
         font-size: 12px;
     }
+    .forgotpass-a {
+        font-size: 14px;
+        margin-left: 60%;
+        font-weight: 300;
+    }
 }

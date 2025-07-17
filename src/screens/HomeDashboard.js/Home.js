@@ -17,29 +17,28 @@ const Home = () => {
         AllOrders();
     }, []);
     return (
-        <div className="d-flex">
-            {/* Sidebar for large screens */}
+        <div className="d-flex flex-column flex-md-row">
+            {/* Sidebar for larger screens */}
             <div className="d-none d-md-block">
-                <Sidebar /> {/* Sidebar visible on large screens */}
+                <Sidebar />
             </div>
 
-            {/* Offcanvas Sidebar for small screens */}
+            {/* Offcanvas sidebar for mobile */}
             <Offcanvas
                 show={showSidebar}
                 onHide={toggleSidebar}
-                className="bg-dark text-white"
-                style={{width: "250px"}}
+                style={{width: "100vh", backgroundColor: "#262D34", color: "white"}} // Custom color for the background
             >
                 <Offcanvas.Header closeButton>
-                    <Offcanvas.Title>Menu</Offcanvas.Title>
+                    <Offcanvas.Title className="text-white">Menu</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body>
-                    <Sidebar /> {/* Sidebar content */}
+                    <Sidebar />
                 </Offcanvas.Body>
             </Offcanvas>
 
             {/* Main Content Area */}
-            <div style={{flex: 1}}>
+            <div className="flex-grow-1 p-3">
                 {/* Header with button to toggle sidebar */}
                 <Header title={"Dashboard"} toggleSidebar={toggleSidebar} />
                 <Dashboard statisticsData={statisticsData} orders={orders} />

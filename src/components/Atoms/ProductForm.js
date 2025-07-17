@@ -1,7 +1,7 @@
-import React, {useContext, useEffect, useState} from "react";
-import {Form, Row, Col, Container, Card} from "react-bootstrap";
+import React, { useContext, useEffect, useState } from "react";
+import { Form, Row, Col, Container, Card } from "react-bootstrap";
 import "../../assets/Css/ProductForm.css";
-import {VendorContext} from "../../context/VendorContext";
+import { VendorContext } from "../../context/VendorContext";
 const ProductForm = ({
     ProductCategory,
     subcategoryApi,
@@ -146,6 +146,7 @@ const ProductForm = ({
         mechanic_fees,
         onDataSubmit,
     ]);
+
 
     useEffect(() => {
         if (isEdit && specificProductData) {
@@ -365,7 +366,7 @@ const ProductForm = ({
                                             type="Number"
                                             placeholder="Mechanic Fee"
                                             value={mechanic_fees}
-                                            onChange={(e) => setmechanic_fees(parseFloat(e.target.value) || null)}
+                                            onChange={(e) => setmechanic_fees(parseFloat(e.target.value) || 0)}
                                         ></Form.Control>
                                     </Form.Group>
                                 </Col>
@@ -376,7 +377,7 @@ const ProductForm = ({
                                             type="Number"
                                             placeholder="Driver Fee"
                                             value={driver_fees}
-                                            onChange={(e) => setdriver_fees(e.target.value)}
+                                            onChange={(e) => setdriver_fees(e.target.value || 0)}
                                         ></Form.Control>
                                     </Form.Group>
                                 </Col>
@@ -405,7 +406,7 @@ const ProductForm = ({
                                                     placeholder="Mechanic Fee"
                                                     value={mechanic_fees}
                                                     onChange={(e) =>
-                                                        setmechanic_fees(parseFloat(e.target.value) || null)
+                                                        setmechanic_fees(parseFloat(e.target.value) || 0)
                                                     }
                                                 ></Form.Control>
                                             </Form.Group>
@@ -417,7 +418,7 @@ const ProductForm = ({
                                                     type="Number"
                                                     placeholder="Driver Fee"
                                                     value={driver_fees}
-                                                    onChange={(e) => setdriver_fees(e.target.value)}
+                                                    onChange={(e) => setdriver_fees(e.target.value || 0)}
                                                 ></Form.Control>
                                             </Form.Group>
                                         </Col>

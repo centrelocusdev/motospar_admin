@@ -1,10 +1,10 @@
-import React, {useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {postAuth} from "../../repository/Repo";
-import {getAppToken} from "../../constants/GetAsyncStorageData";
-import {FaAngleDown, FaAngleUp} from "react-icons/fa";
-import {googleLogout} from "@react-oauth/google";
-import {useNavigate, useLocation} from "react-router-dom";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { postAuth } from "../../repository/Repo";
+import { getAppToken } from "../../constants/GetAsyncStorageData";
+import { FaAngleDown, FaAngleUp } from "react-icons/fa";
+import { googleLogout } from "@react-oauth/google";
+import { useNavigate, useLocation } from "react-router-dom";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Sidebar = () => {
@@ -64,7 +64,7 @@ const Sidebar = () => {
     const isActive = (path) => location.pathname === path;
 
     return (
-        <div className="sidebar text-white p-4" style={{width: "280px", backgroundColor: "#262D34", height: "200vh"}}>
+        <div className="sidebar text-white p-4" style={{ width: "280px", backgroundColor: "#262D34", height: "200vh" }}>
             <div className="brand mb-4">
                 <img src={require("../../assets/images/Logo.png")} alt="logo" className="img-fluid" />
                 <h3>Motospar</h3>
@@ -133,6 +133,19 @@ const Sidebar = () => {
                                     Add New Product
                                 </a>
                             </li>
+                            <li className="nav-item mb-3">
+                                <a
+                                    href="/addProductbyCsv"
+                                    className="nav-link text-white"
+                                    style={{
+                                        filter: isActive("/addProductbyCsv")
+                                            ? "invert(47%) sepia(99%) saturate(3727%) hue-rotate(220deg) brightness(91%) contrast(105%)"
+                                            : "none",
+                                    }}
+                                >
+                                    Add New Product by csv
+                                </a>
+                            </li>
                         </ul>
                     )}
                 </li>
@@ -182,6 +195,22 @@ const Sidebar = () => {
                             }}
                         />
                         Vendor Management
+                    </a>
+                </li>
+                <li className="nav-item mb-3">
+                    <a href="/mechanicList" className="productlist mb-3 d-flex align-items-center gap-2">
+                        <img
+                            src={
+                                isActive("/mechanicList")
+                                    ? require("../../assets/images/user_focus.png")
+                                    : require("../../assets/images/user.png")
+                            }
+                            style={{
+                                width: 20,
+                                height: 20,
+                            }}
+                        />
+                        Mechanic Management
                     </a>
                 </li>
                 <li className="nav-item mb-3">
@@ -253,7 +282,7 @@ const Sidebar = () => {
                     <a
                         href="#"
                         className="productlist mb-3 d-flex align-items-center gap-2"
-                        style={{color: "red"}}
+                        style={{ color: "red" }}
                         onClick={HandleLogout}
                     >
                         Log Out

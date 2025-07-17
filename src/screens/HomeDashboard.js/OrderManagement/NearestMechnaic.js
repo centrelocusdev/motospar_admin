@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import Sidebar from "../../../components/Atoms/Sidebar";
 import Header from "../../../components/HOC/Header";
-import { Table, Form, InputGroup, Button, Pagination, Badge, Card, Offcanvas } from "react-bootstrap";
+import { Table, Form, InputGroup, Button, Pagination, Badge, Card, Offcanvas, Modal } from "react-bootstrap";
 import { AiOutlineSearch, AiFillEdit, AiFillDelete } from "react-icons/ai";
 import dayjs from "dayjs";
 import "../../../assets/Css/ProductList.css";
@@ -9,22 +9,23 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FaEye, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { VendorContext } from "../../../context/VendorContext";
 import ToastComponent from "../../../components/HOC/Toast";
-const NearestVendorlist = () => {
-    const { assignVendor, getNearestVendor, NearestVendor, toastMessage } = useContext(VendorContext);
+const NearestMechanic = () => {
+    const { assignMechanic, getNearestMechanic, NearestMechanic, toastMessage } = useContext(VendorContext);
     const navigate = useNavigate();
     const location = useLocation();
-    const itemId = location.state?.itemId;
-    const itemName = location.state?.itemName;
+    const item = location.state?.item;
     const [ShowToast, setShowToast] = useState(false);
     const [showSidebar, setShowSidebar] = useState(false); // Manage sidebar visibility on mobile
-
+    const [showModal, setShowModal] = useState(false);
+    const [notes, setnotes] = useState('');
+    const [selectedMechanicId, setSelectedMechanicId] = useState(null);
     const toggleSidebar = () => setShowSidebar(!showSidebar); // Function to toggle sidebar
     useEffect(() => {
-        getNearestVendor(itemId);
+        getNearestMechanic(item?.id);
     }, []);
 
-    const handleAssignVendor = (vendorId, sellingPrice) => {
-        assignVendor(itemId, vendorId, sellingPrice);
+    const handleAssignVendor = (MechanicId) => {
+        assignMechanic(item?.id, MechanicId, item?.mechanic_fees_for_mechanic, notes);
         setShowToast(true);
 
         setTimeout(() => {
@@ -52,7 +53,7 @@ const NearestVendorlist = () => {
                 </Offcanvas.Body>
             </Offcanvas>
             <div style={{ flex: 1 }}>
-                <Header title={"Vendor Management"} toggleSidebar={toggleSidebar} />
+                <Header title={"Assign Mechanic"} toggleSidebar={toggleSidebar} />
                 <ToastComponent
                     show={ShowToast}
                     type={"success"}
@@ -60,11 +61,11 @@ const NearestVendorlist = () => {
                     onClose={() => setShowToast(false)}
                 />
                 <div className="m-4">
-                    <h4>List Of Vendors ({itemName})</h4>
+                    <h4>List Of Mechanics for ({item?.product?.name})</h4>
                 </div>
                 <Card className="shadow-sm rounded custom-card m-4">
                     <div className="p-4">
-                        {NearestVendor?.length > 0 ? (
+                        {NearestMechanic?.length > 0 ? (
                             <Table bordered hover responsive className="align-middle">
                                 <thead>
                                     <tr>
@@ -72,21 +73,21 @@ const NearestVendorlist = () => {
                                         <th>Name</th>
                                         <th>Email Id</th>
                                         <th>Phone Number</th>
-                                        <th>Price</th>
+                                        <th>Vehicle Specialist</th>
                                         <th>Distance</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                    {NearestVendor.map((vendor, index) => (
-                                        <tr key={vendor?.vendor_id}>
+                                    {NearestMechanic.map((mechanic, index) => (
+                                        <tr key={mechanic?.vendor_id}>
                                             <td>{index + 1}</td>
-                                            <td>{vendor?.store_name}</td>
-                                            <td>{vendor?.store_contact_email}</td>
-                                            <td>{vendor?.store_contact_phone}</td>
-                                            <td>{vendor?.vendor_selling_price}</td>
-                                            <td>{vendor?.distance}</td>
+                                            <td>{mechanic?.mechanic_name}</td>
+                                            <td>{mechanic?.contact_email}</td>
+                                            <td>{mechanic?.contact_phone}</td>
+                                            <td>{mechanic?.specialization}</td>
+                                            <td>{mechanic?.distance}</td>
 
                                             <td className="d-flex">
                                                 <Button
@@ -94,10 +95,8 @@ const NearestVendorlist = () => {
                                                     className="savebtn"
                                                     title="Assign"
                                                     onClick={() => {
-                                                        handleAssignVendor(
-                                                            vendor?.vendor_id,
-                                                            vendor?.vendor_selling_price
-                                                        );
+                                                        setSelectedMechanicId(mechanic?.mechanic_id);
+                                                        setShowModal(true);
                                                     }}
                                                 >
                                                     Assign
@@ -109,14 +108,46 @@ const NearestVendorlist = () => {
                             </Table>
                         ) : (
                             <div className="d-flex justify-content-center align-items-center" style={{ height: "10vh" }}>
-                                <h4>No Vendor's Found</h4>
+                                <h4>No Mechanic's Found</h4>
                             </div>
                         )}
                     </div>
                 </Card>
             </div>
+            <Modal show={showModal} onHide={() => setShowModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Assign Mechanic</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Group>
+                        <Form.Label>What work need to be done?</Form.Label>
+                        <Form.Control
+                            as="textarea"
+                            rows={3}
+                            placeholder="Enter notes for mechanic..."
+                            value={notes}
+                            onChange={(e) => setnotes(e.target.value)}
+                        />
+                    </Form.Group>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowModal(false)}>
+                        Cancel
+                    </Button>
+                    <Button
+                        variant="primary"
+                        onClick={() => {
+                            handleAssignVendor(selectedMechanicId);
+                            setShowModal(false);
+                            setnotes('');
+                        }}
+                    >
+                        Assign
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };
 
-export default NearestVendorlist;
+export default NearestMechanic;

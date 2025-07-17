@@ -1,6 +1,6 @@
-import React, {createContext, useState, useEffect, useRef} from "react";
+import React, { createContext, useState, useEffect, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import {
     DeleteAuth,
     getAuth,
@@ -14,9 +14,9 @@ import {
     postUser,
     postUserLogout,
 } from "../repository/Repo";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const VendorContext = createContext();
-const VendorProvider = ({children}) => {
+const VendorProvider = ({ children }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [loadingactivity, setloadingactivity] = useState(false);
@@ -30,7 +30,9 @@ const VendorProvider = ({children}) => {
     const [hasNext, setHasNext] = useState(false);
     const [variantId, setvariantId] = useState();
     const [vendors, setvendors] = useState([]);
+    const [mechanics, setmechanics] = useState([])
     const [vendorDetail, setvendorDetail] = useState("");
+    const [mechanicDetail, setmechanicDetail] = useState([])
     const [toastMessage, settoastMessage] = useState("");
     const [images, setimages] = useState([]);
     const [users, setusers] = useState([]);
@@ -38,9 +40,12 @@ const VendorProvider = ({children}) => {
     const [userDetail, setuserDetail] = useState("");
     const [vendoritem, setvendoritem] = useState([]);
     const [orders, setorders] = useState([]);
+    const [mechnanicTransactions, setmechnanicTransactions] = useState([])
     const [NearestVendor, setNearestVendor] = useState([]);
+    const [NearestMechanic, setNearestMechanic] = useState([]);
     const [requestProducts, setrequestProducts] = useState([]);
     const [statisticsData, setstatisticsData] = useState("");
+    const [mechanicJobs, setmechanicJobs] = useState([])
     const AllProduct = async (page, categoryId, subCategoryId) => {
         setloadingactivity(true);
         try {
@@ -183,7 +188,7 @@ const VendorProvider = ({children}) => {
             mechanic_fees,
             images,
         } = productDetails;
-
+        console.log(">>>>", name, driver_fees, mechanic_fees)
         try {
             const formData = new FormData();
 
@@ -202,7 +207,7 @@ const VendorProvider = ({children}) => {
 
             // Add variant details
             const variantData = {
-                price,
+                final_listing_price_on_motospar: price,
                 discount,
                 in_stock: true,
                 sku,
@@ -371,6 +376,36 @@ const VendorProvider = ({children}) => {
             console.log("errorr... in ALLVendor....VEndorcontext", e);
         }
     };
+    const AllMechanics = async (page) => {
+        setloadingactivity(true);
+        try {
+            const offset = (page - 1) * 10;
+
+            var body = {
+                limit: 10,
+                offset: page ? offset : 0,
+            };
+
+            const res = await postAuth("admin/mechanic/users/view", body);
+            console.log(">>res..ALLMechanics.", res);
+
+            if (res?.status === true) {
+                setmechanics(res?.data?.users);
+                setTotalCount(res?.data?.total_count);
+                setPageCount(res?.data?.page_count);
+                setHasNext(res?.data?.has_next);
+                setCurrentPage(res?.data?.current_page);
+                setloadingactivity(false);
+            } else {
+                setloadingactivity(false);
+                alert(res?.message);
+                console.log(res?.message);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+            console.log("errorr... in ALLMechanics....VEndorcontext", e);
+        }
+    };
     const AllUsers = async (page) => {
         setloadingactivity(true);
         try {
@@ -454,7 +489,27 @@ const VendorProvider = ({children}) => {
             console.log("errorr... in getSpecificvendor....VEndorcontext", e);
         }
     };
+    const getSpecificMechanic = async (id) => {
+        setloadingactivity(true);
+        try {
+            const res = await getAuth(`admin/mechanic/users/${id}/details/`);
+            console.log(">>res..specificVendor.", res);
 
+            if (res?.data) {
+                setmechanicDetail(res?.data?.user);
+
+                setloadingactivity(false);
+                return res?.data?.user
+            } else {
+                setloadingactivity(false);
+                alert(res?.message);
+                console.log(res?.message);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+            console.log("errorr... in getSpecificMechanic....VEndorcontext", e);
+        }
+    };
     const AllOrders = async (page) => {
         setloadingactivity(true);
         try {
@@ -552,6 +607,49 @@ const VendorProvider = ({children}) => {
         } catch (e) {
             setloadingactivity(false);
             console.log("errorr... in assignVendor....VEndorcontext", e);
+        }
+    };
+    const getNearestMechanic = async (id) => {
+        setloadingactivity(true);
+        try {
+            const res = await getAuth(`admin/order-item/${id}/find-nearest-mechanics/`);
+            console.log(">>res..getNearestMechanic.", res);
+
+            if (res?.data) {
+
+                setNearestMechanic(res?.data?.nearest_mechanics);
+                setloadingactivity(false);
+            } else {
+                setloadingactivity(false);
+                console.log(res?.message);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+            console.log("errorr... in getNearestMechanic....VEndorcontext", e);
+        }
+    };
+    const assignMechanic = async (order_item_id, mechanic_id, mechanic_fees, notes) => {
+        setloadingactivity(true);
+        try {
+            var body = {
+                mechanic_id,
+                mechanic_fees,
+                notes
+            };
+            const res = await postAuth(`admin/order-item/${order_item_id}/assign-mechanic`, body);
+            console.log(">>res..assignMechanic.", res);
+
+            if (res?.data) {
+                settoastMessage(res?.message);
+                setloadingactivity(false);
+            } else {
+                setloadingactivity(false);
+                alert(res?.message);
+                console.log(res?.message);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+            console.log("errorr... in assignMechanic....VEndorcontext", e);
         }
     };
     const requestProductList = async (page) => {
@@ -757,7 +855,7 @@ const VendorProvider = ({children}) => {
             // Add product details
 
             const variantData = {
-                price,
+                final_listing_price_on_motospar: price,
                 discount,
                 in_stock: false,
                 sku,
@@ -800,7 +898,7 @@ const VendorProvider = ({children}) => {
             console.log("imageedit", data?.images);
             // Add product details
             formData.append("sku", data?.sku);
-            formData.append("price", data?.price);
+            formData.append("final_listing_price_on_motospar", data?.price);
             formData.append("discount", data?.discount);
             formData.append("in_stock", data?.stock_status);
             formData.append("color", data?.color);
@@ -950,6 +1048,7 @@ const VendorProvider = ({children}) => {
             console.log("errorr... in assignDriver....VEndorcontext", e);
         }
     };
+
     const EditDriver = async (data) => {
         setloadingactivity(true);
         try {
@@ -1015,6 +1114,171 @@ const VendorProvider = ({children}) => {
             console.log("errorr... in deleteDriver....VEndorcontext", e);
         }
     };
+    const vendorVerfication = async (id) => {
+        setloadingactivity(true);
+        try {
+            const res = await postAuth(`admin/vendors/${id}/verify`);
+            console.log(">>res..vendorVerfication.", res);
+
+            if (res?.data) {
+                settoastMessage(res?.message);
+                setloadingactivity(false);
+            } else {
+                setloadingactivity(false);
+                alert(res?.message);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+            console.log("errorr... in vendorVerfication....VEndorcontext", e);
+        }
+    };
+    const MechanicVerfication = async (id) => {
+        setloadingactivity(true);
+        try {
+            const res = await postAuth(`admin/mechanics/${id}/verify`);
+            console.log(">>res..MechanicVerfication.", res);
+
+            if (res?.data) {
+                settoastMessage(res?.message);
+                setloadingactivity(false);
+            } else {
+                setloadingactivity(false);
+                alert(res?.message);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+            console.log("errorr... in MechanicVerfication....", e);
+        }
+    };
+    const GetDummyTemplete = async () => {
+        setloadingactivity(true);
+        try {
+            const res = await getCommon('admin/bulk-upload/template/');
+            console.log(">>res..GetDummyTemplete.", res);
+
+            if (res?.data) {
+                // setvendorDetail(res?.data?.vendor);
+
+
+                setloadingactivity(false);
+            } else {
+                setloadingactivity(false);
+
+                console.log(res?.message);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+            console.log("errorr... in GetDummyTemplete....VEndorcontext", e);
+        }
+    };
+    const UploadCsv = async (csv) => {
+        console.log("CSV FILE>>>", csv)
+        setloadingactivity(true);
+        try {
+            const formData = new FormData();
+
+            // Add product details
+            formData.append("file", csv);
+            const res = await postFormdatatAuth("admin/bulk-upload", formData);
+            console.log(">>res..UploadCsv.", res);
+
+            if (res?.status === true) {
+                settoastMessage('File uploaded succesfully');
+                setloadingactivity(false);
+            } else {
+                settoastMessage('Something went wrong');
+                setloadingactivity(false);
+
+                console.log(res?.message);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+            console.log("errorr... in UploadCsv....VEndorcontext", e);
+        }
+    };
+    const GetJobs = async (page, mechanic_email, job_status, payment_status) => {
+        setloadingactivity(true);
+        try {
+            const offset = (page - 1) * 10;
+
+            var body = {
+                limit: 10,
+                offset: page ? offset : 0,
+                mechanic_email,
+                job_status: job_status ? job_status : '',
+                payment_status: payment_status ? payment_status : ''
+            };
+
+            const res = await postAuth("mechanic/jobs/view", body);
+            console.log("GetJobs>>", res)
+
+            if (res?.data?.status == 'success') {
+                setmechanicJobs(res?.data?.jobs);
+                setTotalCount(res?.data?.total_count);
+                setPageCount(res?.data?.page_count);
+                setHasNext(res?.data?.has_next);
+                setCurrentPage(res?.data?.current_page);
+                setloadingactivity(false);
+            } else {
+                setloadingactivity(false);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+        }
+    }
+    const JobPayemntStatusUpdate = async (job_id, payment_date) => {
+        setloadingactivity(true);
+        try {
+            var body = {
+                payment_date
+            }
+            const res = await postAuth(`admin/mechanic-job/${job_id}/update-payment`, body);
+            console.log(">>res..JobPayemntStatusUpdate.", res);
+
+            if (res?.data?.status == 'success') {
+                settoastMessage(res?.message);
+                setloadingactivity(false);
+                return true
+            } else {
+                setloadingactivity(false);
+                alert(res?.message);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+            console.log("errorr... in vendorVerfication....VEndorcontext", e);
+        }
+    };
+    const GetMechanicTransactions = async (page) => {
+        setloadingactivity(true);
+        try {
+            const offset = (page - 1) * 10;
+
+            var body = {
+                limit: 10,
+                offset: page ? offset : 0,
+            };
+
+            const res = await postAuth("admin/orders/view", body);
+            console.log(">>res..MechanicTransactions.", res);
+
+            if (res?.data) {
+
+                setmechnanicTransactions(res?.data?.platform_fees);
+                setTotalCount(res?.data?.total_count);
+                setPageCount(res?.data?.page_count);
+                setHasNext(res?.data?.has_next);
+                setCurrentPage(res?.data?.current_page);
+                setloadingactivity(false);
+            } else {
+                setloadingactivity(false);
+                alert(res?.message);
+                console.log(res?.message);
+            }
+        } catch (e) {
+            setloadingactivity(false);
+            console.log("errorr... in ALLorders....VEndorcontext", e);
+        }
+    };
     return (
         <VendorContext.Provider
             value={{
@@ -1075,6 +1339,23 @@ const VendorProvider = ({children}) => {
                 assignDriver,
                 EditDriver,
                 deleteDriver,
+                GetDummyTemplete,
+                vendorVerfication,
+                UploadCsv,
+                AllMechanics,
+                mechanics,
+                getSpecificMechanic,
+                mechanicDetail,
+                getNearestMechanic,
+                NearestMechanic,
+                assignMechanic,
+                GetJobs,
+                mechanicJobs,
+                JobPayemntStatusUpdate,
+                MechanicVerfication,
+                GetMechanicTransactions,
+                mechnanicTransactions,
+                loadingactivity
             }}
         >
             {children}
@@ -1082,4 +1363,4 @@ const VendorProvider = ({children}) => {
     );
 };
 
-export {VendorProvider, VendorContext};
+export { VendorProvider, VendorContext };

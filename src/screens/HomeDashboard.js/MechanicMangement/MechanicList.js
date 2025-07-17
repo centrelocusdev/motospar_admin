@@ -9,7 +9,7 @@ import DeleteConfirmationModal from "../../../components/Atoms/DeleteModal";
 import ToastComponent from "../../../components/HOC/Toast";
 import { useNavigate } from "react-router-dom";
 
-const Vendorlist = () => {
+const MechanicList = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState("");
     const [showToast, setShowToast] = useState(false);
@@ -22,9 +22,9 @@ const Vendorlist = () => {
     };
 
     const {
-        AllVendors,
-        vendorVerfication,
-        vendors,
+        AllMechanics,
+        MechanicVerfication,
+        mechanics,
         setCurrentPage,
         currentPage,
         hasNext,
@@ -34,15 +34,15 @@ const Vendorlist = () => {
         loadingactivity
     } = useContext(VendorContext);
 
-    const filterVendor = vendors.filter(
-        (vendor) =>
-            vendor?.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            vendor?.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            vendor?.store_postal_code.toLowerCase().includes(searchTerm.toLowerCase())
+    const filterMechanic = mechanics.filter(
+        (mechanics) =>
+            mechanics?.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            mechanics?.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            mechanics?.mechanic_profile?.base_postal_code.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     useEffect(() => {
-        AllVendors(currentPage);
+        AllMechanics(currentPage);
     }, [currentPage]);
 
     const handleNextPage = () => {
@@ -57,14 +57,14 @@ const Vendorlist = () => {
         }
     };
 
-    const handleViewClick = (vendorUserId) => {
-        navigate("/vendorDetail", { state: { vendorId: vendorUserId } });
+    const handleViewClick = (Id) => {
+        navigate("/mechanicDetail", { state: { MechanicId: Id } });
     };
 
-    const handleVerfication = async (vendorUserId) => {
-        setloadingid(vendorUserId)
-        await vendorVerfication(vendorUserId);
-        await AllVendors(currentPage);
+    const handleVerfication = async (mechanicUserId) => {
+        setloadingid(mechanicUserId)
+        await MechanicVerfication(mechanicUserId);
+        await AllMechanics(currentPage);
         setShowToast(true);
 
         setTimeout(() => {
@@ -84,7 +84,7 @@ const Vendorlist = () => {
         if (deleteId) {
             const response = await deleteCommon(`admin/vendors/${deleteId}/delete`);
             if (response.success) {
-                AllVendors(currentPage); // Refresh table after deletion
+                AllMechanics(currentPage); // Refresh table after deletion
             } else {
                 console.error("Failed to delete vendor");
             }
@@ -114,9 +114,9 @@ const Vendorlist = () => {
             </Offcanvas>
 
             <div style={{ flex: 1 }}>
-                <Header title={"Vendor Management"} toggleSidebar={toggleSidebar} />
+                <Header title={"Mechanics Management"} toggleSidebar={toggleSidebar} />
                 <div className="m-4">
-                    <h4>All Vendors</h4>
+                    <h4>All Mechanics</h4>
                 </div>
                 <Card className="shadow-sm rounded custom-card m-4">
                     <div className="p-4">
@@ -166,17 +166,17 @@ const Vendorlist = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filterVendor.map((vendor, index) => (
-                                    <tr key={vendor?.id}>
+                                {filterMechanic.map((mechanic, index) => (
+                                    <tr key={mechanic?.id}>
                                         <td>{index + 1}</td>
                                         <td>
-                                            {vendor?.first_name} {vendor?.last_name}
+                                            {mechanic?.first_name} {mechanic?.last_name}
                                         </td>
-                                        <td>{vendor?.email}</td>
-                                        <td>{vendor?.store_postal_code || "N/A"}</td>
-                                        <td>{vendor?.store_contact_phone || "N/A"}</td>
+                                        <td>{mechanic?.email}</td>
+                                        <td>{mechanic?.mechanic_profile?.base_postal_code || "N/A"}</td>
+                                        <td>{mechanic?.phone_number || "N/A"}</td>
                                         <td>
-                                            {vendor?.is_verified ? (
+                                            {mechanic?.is_verified ? (
                                                 <Badge pill bg="success">
                                                     Verified
                                                 </Badge>
@@ -185,9 +185,9 @@ const Vendorlist = () => {
                                                     variant="outline-success"
                                                     size="sm"
                                                     title="Success"
-                                                    onClick={() => handleVerfication(vendor?.user)}
+                                                    onClick={() => handleVerfication(mechanic?.id)}
                                                 >
-                                                    {loadingactivity && loadingid === vendor?.id ? <Spinner key={vendor?.id} /> : "Verify Now"}
+                                                    {loadingactivity && loadingid === mechanic?.id ? <Spinner key={mechanic?.id} /> : "Verify Now"}
                                                 </Button>
                                             )}
                                         </td>
@@ -197,7 +197,7 @@ const Vendorlist = () => {
                                                 size="sm"
                                                 className="me-2"
                                                 title="View"
-                                                onClick={() => handleViewClick(vendor?.user)}
+                                                onClick={() => handleViewClick(mechanic?.id)}
                                             >
                                                 <FaEye />
                                             </Button>
@@ -206,7 +206,7 @@ const Vendorlist = () => {
                                                 variant="outline-danger"
                                                 size="sm"
                                                 title="Delete"
-                                                onClick={() => handleDeleteClick(vendor?.id)}
+                                                onClick={() => handleDeleteClick(mechanic?.id)}
                                             >
                                                 <AiFillDelete />
                                             </Button>
@@ -238,4 +238,4 @@ const Vendorlist = () => {
     );
 };
 
-export default Vendorlist;
+export default MechanicList;
