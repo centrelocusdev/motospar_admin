@@ -1,11 +1,11 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "../../assets/Css/Auth.css";
-import {AuthContext} from "../../context/AuthContext";
-import {useGoogleLogin} from "@react-oauth/google";
+import { AuthContext } from "../../context/AuthContext";
+import { useGoogleLogin } from "@react-oauth/google";
 const Login = () => {
     const [email, setemail] = useState("");
     const [password, setpassword] = useState("");
-    const {GoogleLogin, Login, loadingactivity} = useContext(AuthContext);
+    const { Login, loadingactivity } = useContext(AuthContext);
     const [user, setuser] = useState([]);
 
     const HandleLogin = (e) => {
@@ -14,16 +14,7 @@ const Login = () => {
         setemail("");
         setpassword("");
     };
-    // const login = useGoogleLogin({
-    //     onSuccess: (tokenResponse) => {
-    //         console.log("Login Success:", tokenResponse);
-    //         // Pass the token to your GoogleLogin function or handle it as needed
-    //         GoogleLogin(tokenResponse.access_token, "vendor");
-    //     },
-    //     onError: (error) => {
-    //         console.log("Login Failed:", error);
-    //     },
-    // });
+
     return (
         <div className="sign-in-container">
             {/* Left side form */}
@@ -65,7 +56,7 @@ const Login = () => {
                     <button className="sign-in-btnforgot" onClick={HandleLogin}>
                         Sign In
                     </button>
-                    <div style={{display: "flex", justifyContent: "center", marginTop: 10}}>
+                    <div style={{ display: "flex", justifyContent: "center", marginTop: 10 }}>
                         <span>---OR---</span>
                     </div>
                     {/* <button className="google-sign-in-btn" onClick={() => login()}>

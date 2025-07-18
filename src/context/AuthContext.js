@@ -2,15 +2,12 @@ import React, { createContext, useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { postGoogle, postUser, postUserLogout } from "../repository/Repo";
 import { useNavigate } from "react-router-dom";
-import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
+
 import { useGoogleLogin } from "@react-oauth/google";
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-    // GoogleSignin.configure({
-    //     webClientId: "818269488302-svso0iqe2cfb53d87s99q2b4h4betkj1.apps.googleusercontent.com",
-    //     offlineAccess: true,
-    // });
+
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -120,66 +117,66 @@ const AuthProvider = ({ children }) => {
         }
     };
 
-    const GoogleLogin = async (token, account_type) => {
-        setloadingactivity(true);
-        try {
-            var body = {
-                access_token: token,
-                account_type: account_type,
-            };
+    // const GoogleLogin = async (token, account_type) => {
+    //     setloadingactivity(true);
+    //     try {
+    //         var body = {
+    //             access_token: token,
+    //             account_type: account_type,
+    //         };
 
-            const res = await postUser("google/login/callback/", body);
-            console.log(">>res", res);
-            if (res?.data) {
-                localStorage.setItem("usertoken", res?.data?.access);
-                localStorage.setItem("user_refreshtoken", res?.data?.refresh);
-                localStorage.setItem("userdetails", JSON.stringify(res?.data.user));
+    //         const res = await postUser("google/login/callback/", body);
+    //         console.log(">>res", res);
+    //         if (res?.data) {
+    //             localStorage.setItem("usertoken", res?.data?.access);
+    //             localStorage.setItem("user_refreshtoken", res?.data?.refresh);
+    //             localStorage.setItem("userdetails", JSON.stringify(res?.data.user));
 
-                dispatch({
-                    type: "SET_TOKEN",
-                    payload: res?.data?.access,
-                });
-                dispatch({
-                    type: "SET_REFRESHTOKEN",
-                    payload: res?.data?.refresh,
-                });
-                dispatch({
-                    type: "SET_USER_DATA",
-                    payload: res?.data?.user,
-                });
-                dispatch({
-                    type: "SET_LOGGEDIN",
-                    payload: true,
-                });
-                setloggedIn(true);
-                setloadingactivity(false);
-                // alert("Success", res?.message);
-                // navigation.navigate('Home')
-            } else {
-                setloadingactivity(false);
-                alert("Error", res?.message);
-            }
-        } catch (error) {
-            if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-                setloadingactivity(false);
-                alert("Error", "user cancelled the login flow");
-            } else if (error.code === statusCodes.IN_PROGRESS) {
-                setloadingactivity(false);
-                alert("In Progress", "sign in already in progress");
-            } else if (error.response) {
-                setloadingactivity(false);
-                console.log(error.response.data);
-                const errorData = error.response.data;
-                alert("error", errorData["non_field_errors"][0] + "Kindly Login through Email and Password");
-                await GoogleSignin.signOut();
-            }
-            // else {
-            //   setloadingactivity(false)
-            //   Alert.alert('Error', "Something went wrong!");
-            //   console.log("Erroorr...", error)
-            // }
-        }
-    };
+    //             dispatch({
+    //                 type: "SET_TOKEN",
+    //                 payload: res?.data?.access,
+    //             });
+    //             dispatch({
+    //                 type: "SET_REFRESHTOKEN",
+    //                 payload: res?.data?.refresh,
+    //             });
+    //             dispatch({
+    //                 type: "SET_USER_DATA",
+    //                 payload: res?.data?.user,
+    //             });
+    //             dispatch({
+    //                 type: "SET_LOGGEDIN",
+    //                 payload: true,
+    //             });
+    //             setloggedIn(true);
+    //             setloadingactivity(false);
+    //             // alert("Success", res?.message);
+    //             // navigation.navigate('Home')
+    //         } else {
+    //             setloadingactivity(false);
+    //             alert("Error", res?.message);
+    //         }
+    //     } catch (error) {
+    //         if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+    //             setloadingactivity(false);
+    //             alert("Error", "user cancelled the login flow");
+    //         } else if (error.code === statusCodes.IN_PROGRESS) {
+    //             setloadingactivity(false);
+    //             alert("In Progress", "sign in already in progress");
+    //         } else if (error.response) {
+    //             setloadingactivity(false);
+    //             console.log(error.response.data);
+    //             const errorData = error.response.data;
+    //             alert("error", errorData["non_field_errors"][0] + "Kindly Login through Email and Password");
+    //             await GoogleSignin.signOut();
+    //         }
+    //         // else {
+    //         //   setloadingactivity(false)
+    //         //   Alert.alert('Error', "Something went wrong!");
+    //         //   console.log("Erroorr...", error)
+    //         // }
+    //     }
+    // };
 
     const Register = async (f_name, l_name, email, pswd, conPswd, c_code, phone) => {
         setloadingactivity(true);
@@ -298,7 +295,7 @@ const AuthProvider = ({ children }) => {
                 Register,
                 ForgotPswds,
                 ForgotResetPswd,
-                GoogleLogin,
+
                 loadingactivity,
                 loggedIn,
             }}
