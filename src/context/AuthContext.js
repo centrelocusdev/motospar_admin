@@ -1,13 +1,12 @@
-import React, {createContext, useState, useEffect, useRef} from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import {useDispatch} from "react-redux";
-import {postGoogle, postUser, postUserLogout} from "../repository/Repo";
-import {useNavigate} from "react-router-dom";
-import {GoogleSignin, statusCodes} from "@react-native-google-signin/google-signin";
-import {useGoogleLogin} from "@react-oauth/google";
+import React, { createContext, useState, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { postGoogle, postUser, postUserLogout } from "../repository/Repo";
+import { useNavigate } from "react-router-dom";
+import { GoogleSignin, statusCodes } from "@react-native-google-signin/google-signin";
+import { useGoogleLogin } from "@react-oauth/google";
 const AuthContext = createContext();
 
-const AuthProvider = ({children}) => {
+const AuthProvider = ({ children }) => {
     // GoogleSignin.configure({
     //     webClientId: "818269488302-svso0iqe2cfb53d87s99q2b4h4betkj1.apps.googleusercontent.com",
     //     offlineAccess: true,
@@ -36,11 +35,11 @@ const AuthProvider = ({children}) => {
     // };
     const isLoggedIn = async () => {
         try {
-            let value = await AsyncStorage.getItem("@usertoken");
-            let users = await AsyncStorage.getItem("@userdetails");
-            let refreshToken = await AsyncStorage.getItem("@user_refreshtoken");
+            let value = localStorage.getItem("usertoken");
+            let users = await JSON.parse(localStorage.getItem("userdetails"));
+            let refreshToken = localStorage.getItem("user_refreshtoken");
             if (users) {
-                users = JSON.parse(users);
+
                 dispatch({
                     type: "SET_TOKEN",
                     payload: value,
@@ -85,9 +84,9 @@ const AuthProvider = ({children}) => {
                 console.log(">>res..SignIn.", res);
 
                 if (res?.data) {
-                    AsyncStorage.setItem("@usertoken", res?.data?.access);
-                    AsyncStorage.setItem("@user_refreshtoken", res?.data?.refresh);
-                    AsyncStorage.setItem("@userdetails", JSON.stringify(res?.data.user));
+                    localStorage.setItem("usertoken", res?.data?.access);
+                    localStorage.setItem("user_refreshtoken", res?.data?.refresh);
+                    localStorage.setItem("userdetails", JSON.stringify(res?.data.user));
 
                     dispatch({
                         type: "SET_TOKEN",
@@ -132,9 +131,9 @@ const AuthProvider = ({children}) => {
             const res = await postUser("google/login/callback/", body);
             console.log(">>res", res);
             if (res?.data) {
-                AsyncStorage.setItem("@usertoken", res?.data?.access);
-                AsyncStorage.setItem("@user_refreshtoken", res?.data?.refresh);
-                AsyncStorage.setItem("@userdetails", JSON.stringify(res?.data.user));
+                localStorage.setItem("usertoken", res?.data?.access);
+                localStorage.setItem("user_refreshtoken", res?.data?.refresh);
+                localStorage.setItem("userdetails", JSON.stringify(res?.data.user));
 
                 dispatch({
                     type: "SET_TOKEN",
@@ -200,11 +199,11 @@ const AuthProvider = ({children}) => {
                     confirm_password: conPswd,
                 };
                 const res = await postUser("admin/register/", body);
-                console.log(">>Body", body, ">>respone", res);
+
                 if (res?.data) {
-                    AsyncStorage.setItem("@usertoken", res?.data?.access);
-                    AsyncStorage.setItem("@user_refreshtoken", res?.data?.refresh);
-                    AsyncStorage.setItem("@userdetails", JSON.stringify(res?.data.user));
+                    localStorage.setItem("usertoken", res?.data?.access);
+                    localStorage.setItem("user_refreshtoken", res?.data?.refresh);
+                    localStorage.setItem("userdetails", JSON.stringify(res?.data.user));
                     setloadingactivity(false);
                     dispatch({
                         type: "SET_LOGGEDIN",
@@ -308,4 +307,4 @@ const AuthProvider = ({children}) => {
         </AuthContext.Provider>
     );
 };
-export {AuthProvider, AuthContext};
+export { AuthProvider, AuthContext };

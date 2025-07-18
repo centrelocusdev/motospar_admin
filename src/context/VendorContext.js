@@ -1,5 +1,4 @@
 import React, { createContext, useState, useEffect, useRef } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import {
     DeleteAuth,
@@ -322,7 +321,7 @@ const VendorProvider = ({ children }) => {
             console.log(">>res..EditProfile.", res);
 
             if (res?.data) {
-                AsyncStorage.setItem("@userdetails", JSON.stringify(res?.data.user));
+                localStorage.setItem("@userdetails", JSON.stringify(res?.data.user));
                 dispatch({
                     type: "SET_USER_DATA",
                     payload: res?.data?.user,

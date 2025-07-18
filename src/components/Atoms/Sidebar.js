@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { postAuth } from "../../repository/Repo";
-import { getAppToken } from "../../constants/GetAsyncStorageData";
 import { FaAngleDown, FaAngleUp } from "react-icons/fa";
 import { googleLogout } from "@react-oauth/google";
 import { useNavigate, useLocation } from "react-router-dom";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getAppToken } from "../../constants/GetAsyncStorageData";
+
 
 const Sidebar = () => {
     const [loadingactivity, setloadingactivity] = useState(false);
@@ -34,8 +34,8 @@ const Sidebar = () => {
 
                 if (res?.data) {
                     googleLogout();
-                    await AsyncStorage.removeItem("@usertoken");
-                    await AsyncStorage.removeItem("@userdetails");
+                    localStorage.removeItem("usertoken");
+                    localStorage.removeItem("userdetails");
                     dispatch({
                         type: "SET_LOGGEDIN",
                         payload: false,
